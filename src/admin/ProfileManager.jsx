@@ -149,7 +149,8 @@ function ProfileManager() {
       location: location.trim(),
       email: email.trim(),
       github_url: githubUrl.trim(),
-      linkedin_url: linkedinUrl.trim(),
+      linkedin_url:
+        linkedinUrl.trim(),
       profile_image_url:
         profileImageUrl,
       updated_at:
@@ -233,16 +234,16 @@ function ProfileManager() {
         );
       }
 
-      /* Maximum 5 MB */
+      /* Maximum 50 MB */
 
       const maxFileSize =
-        5 * 1024 * 1024;
+        50 * 1024 * 1024;
 
       if (
         file.size > maxFileSize
       ) {
         throw new Error(
-          "Profile image must be smaller than 5 MB."
+          "Profile image must be smaller than 50 MB."
         );
       }
 
@@ -499,7 +500,7 @@ function ProfileManager() {
             <p className="mt-4 text-center text-xs leading-5 text-gray-600">
               JPG, PNG or WebP
               <br />
-              Maximum size: 5 MB
+              Maximum size: 50 MB
             </p>
 
           </div>
@@ -731,6 +732,7 @@ function InputField({
             *
           </span>
         )}
+
       </label>
 
       <div className="flex items-center rounded-xl border border-white/10 bg-white/5 px-4 transition focus-within:border-purple-500/60">
@@ -756,8 +758,7 @@ function InputField({
             event
           ) =>
             onChange(
-              event.target
-                .value
+              event.target.value
             )
           }
           placeholder={
