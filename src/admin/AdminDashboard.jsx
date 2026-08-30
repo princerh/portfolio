@@ -7,9 +7,11 @@ import {
   LayoutDashboard,
   LogOut,
   Mail,
+  Menu,
   Settings,
   Sparkles,
   UserRound,
+  X,
 } from "lucide-react";
 
 import { useState } from "react";
@@ -36,6 +38,11 @@ function AdminDashboard() {
 
   const [activeSection, setActiveSection] =
     useState("Dashboard");
+
+  const [
+    mobileSidebarOpen,
+    setMobileSidebarOpen,
+  ] = useState(false);
 
   const menuItems = [
     {
@@ -81,10 +88,26 @@ function AdminDashboard() {
   ];
 
   /* ======================================= */
+  /* CHANGE SECTION */
+  /* ======================================= */
+
+  function handleSectionChange(section) {
+    setActiveSection(section);
+    setMobileSidebarOpen(false);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
+
+  /* ======================================= */
   /* LOGOUT */
   /* ======================================= */
 
   async function handleLogout() {
+    setMobileSidebarOpen(false);
+
     const { error } = await logout();
 
     if (error) {
@@ -106,17 +129,69 @@ function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-[#050816] text-white">
-      <div className="flex min-h-screen">
 
-        {/* ================================= */}
-        {/* SIDEBAR */}
-        {/* ================================= */}
+      {/* ================================= */}
+      {/* MOBILE / TABLET HEADER */}
+      {/* ================================= */}
 
-        <aside className="hidden w-64 shrink-0 border-r border-white/10 bg-[#090c1b] p-6 lg:flex lg:flex-col">
+      <header className="sticky top-0 z-30 flex h-[72px] items-center justify-between border-b border-white/10 bg-[#090c1b]/95 px-5 backdrop-blur-xl lg:hidden">
 
-          {/* Logo */}
+        <div>
+          <h1 className="gradient-text text-xl font-bold">
+            Prince.
+          </h1>
 
-          <div className="mb-10">
+          <p className="mt-0.5 text-[11px] text-gray-500">
+            Portfolio Admin
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() =>
+            setMobileSidebarOpen(true)
+          }
+          aria-label="Open admin navigation"
+          aria-expanded={mobileSidebarOpen}
+          className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-300 transition hover:border-purple-500/30 hover:bg-purple-500/10 hover:text-purple-300"
+        >
+          <Menu size={22} />
+        </button>
+
+      </header>
+
+      {/* ================================= */}
+      {/* MOBILE / TABLET OVERLAY */}
+      {/* ================================= */}
+
+      <div
+        onClick={() =>
+          setMobileSidebarOpen(false)
+        }
+        className={`fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
+          mobileSidebarOpen
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0"
+        }`}
+      />
+
+      {/* ================================= */}
+      {/* MOBILE / TABLET SIDEBAR */}
+      {/* ================================= */}
+
+      <aside
+        className={`fixed bottom-0 left-0 top-0 z-50 flex w-[280px] max-w-[85vw] flex-col border-r border-white/10 bg-[#090c1b] p-6 shadow-2xl transition-transform duration-300 ease-out lg:hidden ${
+          mobileSidebarOpen
+            ? "translate-x-0"
+            : "-translate-x-full"
+        }`}
+      >
+
+        {/* Mobile Sidebar Header */}
+
+        <div className="mb-8 flex items-start justify-between gap-4">
+
+          <div>
             <h1 className="gradient-text text-2xl font-bold">
               Prince.
             </h1>
@@ -126,9 +201,111 @@ function AdminDashboard() {
             </p>
           </div>
 
+          <button
+            type="button"
+            onClick={() =>
+              setMobileSidebarOpen(false)
+            }
+            aria-label="Close admin navigation"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-300 transition hover:border-purple-500/30 hover:text-purple-300"
+          >
+            <X size={19} />
+          </button>
+
+        </div>
+
+        {/* Mobile Navigation */}
+
+        <nav className="flex-1 space-y-2 overflow-y-auto pr-1">
+
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+
+            const isActive =
+              activeSection === item.name;
+
+            return (
+              <button
+                key={item.name}
+                type="button"
+                onClick={() =>
+                  handleSectionChange(
+                    item.name
+                  )
+                }
+                className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm transition duration-200 ${
+                  isActive
+                    ? "bg-purple-500/15 text-purple-300"
+                    : "text-gray-400 hover:bg-purple-500/10 hover:text-purple-300"
+                }`}
+              >
+                <Icon size={19} />
+
+                <span>
+                  {item.name}
+                </span>
+              </button>
+            );
+          })}
+
+        </nav>
+
+        {/* Mobile User */}
+
+        <div className="mt-6 border-t border-white/10 pt-5">
+
+          <p className="mb-1 text-xs text-gray-600">
+            Signed in as
+          </p>
+
+          <p className="mb-4 truncate text-sm text-gray-400">
+            {user?.email}
+          </p>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-red-400 transition hover:bg-red-500/10"
+          >
+            <LogOut size={19} />
+
+            Logout
+          </button>
+
+        </div>
+
+      </aside>
+
+      {/* ================================= */}
+      {/* MAIN ADMIN LAYOUT */}
+      {/* ================================= */}
+
+      <div className="flex min-h-[calc(100vh-72px)] lg:min-h-screen">
+
+        {/* ================================= */}
+        {/* DESKTOP SIDEBAR */}
+        {/* ================================= */}
+
+        <aside className="hidden w-64 shrink-0 border-r border-white/10 bg-[#090c1b] p-6 lg:flex lg:min-h-screen lg:flex-col">
+
+          {/* Logo */}
+
+          <div className="mb-10">
+
+            <h1 className="gradient-text text-2xl font-bold">
+              Prince.
+            </h1>
+
+            <p className="mt-1 text-xs text-gray-500">
+              Portfolio Admin
+            </p>
+
+          </div>
+
           {/* Navigation */}
 
           <nav className="flex-1 space-y-2">
+
             {menuItems.map((item) => {
               const Icon = item.icon;
 
@@ -140,7 +317,7 @@ function AdminDashboard() {
                   key={item.name}
                   type="button"
                   onClick={() =>
-                    setActiveSection(
+                    handleSectionChange(
                       item.name
                     )
                   }
@@ -155,12 +332,14 @@ function AdminDashboard() {
                   <span>
                     {item.name}
                   </span>
+
                 </button>
               );
             })}
+
           </nav>
 
-          {/* User information */}
+          {/* User Information */}
 
           <div className="mt-8 border-t border-white/10 pt-6">
 
@@ -190,7 +369,7 @@ function AdminDashboard() {
         {/* MAIN CONTENT */}
         {/* ================================= */}
 
-        <main className="min-w-0 flex-1 p-5 sm:p-6 lg:p-10">
+        <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-10">
 
           <div className="mx-auto max-w-7xl">
 
@@ -199,7 +378,9 @@ function AdminDashboard() {
             {activeSection === "Dashboard" && (
               <DashboardHome
                 user={user}
-                setActiveSection={setActiveSection}
+                setActiveSection={
+                  handleSectionChange
+                }
               />
             )}
 
@@ -281,6 +462,7 @@ function DashboardHome({
 }) {
   return (
     <>
+
       {/* Header */}
 
       <div className="mb-10">
@@ -299,11 +481,13 @@ function DashboardHome({
 
         {user?.email && (
           <p className="mt-2 text-sm text-gray-600">
+
             Signed in as{" "}
 
             <span className="text-purple-400">
               {user.email}
             </span>
+
           </p>
         )}
 
@@ -355,7 +539,7 @@ function DashboardHome({
           Quick Actions
         </h3>
 
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
 
           <QuickAction
             title="Edit Profile"
@@ -409,7 +593,7 @@ function DashboardHome({
       {/* CONTENT MANAGEMENT */}
       {/* ================================= */}
 
-      <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
 
         <QuickAction
           title="Manage Skills"
@@ -587,6 +771,7 @@ function ComingSoonSection({
 }) {
   return (
     <>
+
       <div className="mb-8">
 
         <p className="text-sm font-medium text-purple-400">

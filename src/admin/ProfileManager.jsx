@@ -222,9 +222,13 @@ function ProfileManager() {
     setErrorMessage("");
 
     try {
-      /* Check file type */
+      /*
+       * Allow any file that the
+       * browser identifies as an image.
+       */
 
       if (
+        !file.type ||
         !file.type.startsWith(
           "image/"
         )
@@ -247,37 +251,41 @@ function ProfileManager() {
         );
       }
 
-      /* Allowed file types */
-
-      const allowedTypes = [
-        "image/jpeg",
-        "image/png",
-        "image/webp",
-      ];
-
-      if (
-        !allowedTypes.includes(
-          file.type
-        )
-      ) {
-        throw new Error(
-          "Only JPG, PNG and WebP images are allowed."
-        );
-      }
-
-      /* Get extension */
+      /*
+       * Get the original extension.
+       * This keeps formats such as
+       * gif, svg, avif, bmp, heic,
+       * heif, tiff, etc.
+       */
 
       const fileExtension =
-        file.name
-          .split(".")
-          .pop()
-          ?.toLowerCase() ||
-        "jpg";
+        file.name.includes(".")
+          ? file.name
+              .split(".")
+              .pop()
+              ?.toLowerCase()
+          : "";
+
+      /*
+       * Create a safe fallback when
+       * an uploaded image has no
+       * filename extension.
+       */
+
+      const fallbackExtension =
+        getExtensionFromMimeType(
+          file.type
+        );
+
+      const finalExtension =
+        fileExtension ||
+        fallbackExtension ||
+        "img";
 
       /* Unique file name */
 
       const fileName =
-        `profile-${Date.now()}.${fileExtension}`;
+        `profile-${Date.now()}.${finalExtension}`;
 
       const filePath =
         `profile/${fileName}`;
@@ -295,6 +303,8 @@ function ProfileManager() {
             cacheControl:
               "3600",
             upsert: false,
+            contentType:
+              file.type,
           }
         );
 
@@ -485,7 +495,7 @@ function ProfileManager() {
 
               <input
                 type="file"
-                accept="image/jpeg,image/png,image/webp"
+                accept="image/*"
                 onChange={
                   handleImageUpload
                 }
@@ -498,7 +508,7 @@ function ProfileManager() {
             </label>
 
             <p className="mt-4 text-center text-xs leading-5 text-gray-600">
-              JPG, PNG or WebP
+              Any browser-supported image format
               <br />
               Maximum size: 50 MB
             </p>
@@ -700,6 +710,33 @@ function ProfileManager() {
 
 
 /* ================================= */
+/* MIME TYPE → EXTENSION */
+/* ================================= */
+
+function getExtensionFromMimeType(
+  mimeType
+) {
+  const mimeMap = {
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/webp": "webp",
+    "image/gif": "gif",
+    "image/svg+xml": "svg",
+    "image/avif": "avif",
+    "image/bmp": "bmp",
+    "image/tiff": "tiff",
+    "image/heic": "heic",
+    "image/heif": "heif",
+    "image/x-icon": "ico",
+    "image/vnd.microsoft.icon":
+      "ico",
+  };
+
+  return mimeMap[mimeType] || "";
+}
+
+
+/* ================================= */
 /* INPUT COMPONENT */
 /* ================================= */
 
@@ -781,7 +818,9 @@ function InputField({
 /* GITHUB SVG ICON */
 /* ================================= */
 
-function GitHubIcon({ size = 18 }) {
+function GitHubIcon({
+  size = 18,
+}) {
   return (
     <svg
       width={size}

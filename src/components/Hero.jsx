@@ -154,11 +154,11 @@ function Hero() {
             Hi, I'm
           </p>
 
-          <h1 className="gradient-text mb-5 text-5xl font-bold leading-[1.05] sm:text-6xl lg:text-7xl">
+          <h1 className="gradient-text mb-5 text-3xl font-bold leading-[1.05] sm:text-6xl lg:text-5xl">
             {fullName}
           </h1>
 
-          <h2 className="mb-6 text-2xl font-semibold leading-relaxed text-gray-200 sm:text-3xl">
+          <h2 className="mb-6 text-xl font-semibold leading-relaxed text-gray-200 sm:text-3xl">
             {headline}
           </h2>
 
