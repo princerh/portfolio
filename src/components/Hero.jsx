@@ -6,13 +6,33 @@ import {
   UserRound,
 } from "lucide-react";
 
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
+
 import { supabase } from "../services/supabase";
 
+import {
+  useTheme,
+} from "../context/ThemeContext";
+
 function Hero() {
-  const [profile, setProfile] = useState(null);
-  const [resume, setResume] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] =
+    useState(null);
+
+  const [resume, setResume] =
+    useState(null);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const {
+    theme,
+  } = useTheme();
+
+  const isDark =
+    theme === "dark";
 
   useEffect(() => {
     loadHeroData();
@@ -47,7 +67,9 @@ function Hero() {
           profileResult.error.message
         );
       } else {
-        setProfile(profileResult.data);
+        setProfile(
+          profileResult.data
+        );
       }
 
       if (resumeResult.error) {
@@ -56,7 +78,9 @@ function Hero() {
           resumeResult.error.message
         );
       } else {
-        setResume(resumeResult.data);
+        setResume(
+          resumeResult.data
+        );
       }
     } catch (error) {
       console.error(
@@ -74,13 +98,33 @@ function Hero() {
 
   if (loading) {
     return (
-      <section className="flex min-h-screen items-center justify-center bg-[#050816]">
+      <section
+        className={`flex min-h-screen items-center justify-center transition-colors duration-300 ${
+          isDark
+            ? "bg-[#050816]"
+            : "bg-[#f8fafc]"
+        }`}
+      >
         <div className="text-center">
-          <span className="loading loading-spinner loading-lg text-purple-500" />
 
-          <p className="mt-4 text-sm text-gray-500">
+          <span
+            className={`loading loading-spinner loading-lg ${
+              isDark
+                ? "text-purple-500"
+                : "text-violet-600"
+            }`}
+          />
+
+          <p
+            className={`mt-4 text-sm ${
+              isDark
+                ? "text-gray-500"
+                : "text-slate-500"
+            }`}
+          >
             Loading portfolio...
           </p>
+
         </div>
       </section>
     );
@@ -121,57 +165,321 @@ function Hero() {
     resume?.file_url || "";
 
   /* ================================= */
-  /* PAGE */
+  /* DARK THEME */
+  /* ================================= */
+
+  if (isDark) {
+    return (
+      <section
+        id="home"
+        className="relative flex min-h-screen items-center overflow-hidden px-6 pb-20 pt-28 lg:px-8"
+      >
+
+        {/* ================================= */}
+        {/* BACKGROUND EFFECTS */}
+        {/* ================================= */}
+
+        <div className="pointer-events-none absolute right-[-100px] top-[80px] h-[420px] w-[420px] rounded-full bg-purple-600/20 blur-[120px]" />
+
+        <div className="pointer-events-none absolute bottom-[-150px] left-[-100px] h-[400px] w-[400px] rounded-full bg-pink-600/10 blur-[130px]" />
+
+        <div className="pointer-events-none absolute left-[45%] top-[20%] h-[250px] w-[250px] rounded-full bg-indigo-600/10 blur-[100px]" />
+
+        {/* ================================= */}
+        {/* MAIN CONTAINER */}
+        {/* ================================= */}
+
+        <div className="relative mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-2 lg:gap-20">
+
+          {/* ================================= */}
+          {/* INTRODUCTION */}
+          {/* MOBILE: SECOND */}
+          {/* DESKTOP: LEFT */}
+          {/* ================================= */}
+
+          <div className="order-2 lg:order-1">
+
+            <p className="mb-3 text-lg text-gray-300">
+              Hi, I'm
+            </p>
+
+            <h1 className="gradient-text mb-5 text-3xl font-bold leading-[1.05] sm:text-6xl lg:text-5xl">
+              {fullName}
+            </h1>
+
+            <h2 className="mb-6 text-xl font-semibold leading-relaxed text-gray-200 sm:text-3xl">
+              {headline}
+            </h2>
+
+            <p className="mb-7 max-w-xl text-base leading-8 text-gray-400 sm:text-lg">
+              {bio}
+            </p>
+
+            {/* Location */}
+
+            {location && (
+              <div className="mb-8 flex items-center gap-2 text-sm text-gray-500">
+
+                <MapPin
+                  size={17}
+                />
+
+                <span>
+                  {location}
+                </span>
+
+              </div>
+            )}
+
+            {/* ================================= */}
+            {/* MAIN BUTTONS */}
+            {/* ================================= */}
+
+            <div className="mb-9 flex flex-wrap gap-4">
+
+              {/* View Projects */}
+
+              <a
+                href="#projects"
+                className="gradient-button flex items-center gap-2 rounded-xl px-6 py-3 font-semibold text-white"
+              >
+                View Projects
+
+                <ArrowRight
+                  size={18}
+                />
+              </a>
+
+              {/* Download Resume */}
+
+              {resumeUrl && (
+                <a
+                  href={resumeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 rounded-xl border border-purple-400/30 bg-white/5 px-6 py-3 font-semibold text-gray-200 transition duration-300 hover:-translate-y-0.5 hover:border-purple-400 hover:bg-purple-500/10 hover:text-white"
+                >
+                  <Download
+                    size={18}
+                  />
+
+                  Download Resume
+                </a>
+              )}
+
+              {/* Contact */}
+
+              <a
+                href="#contact"
+                className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 font-semibold text-gray-300 transition duration-300 hover:border-purple-500/40 hover:bg-purple-500/10 hover:text-white"
+              >
+                Contact Me
+              </a>
+
+            </div>
+
+            {/* ================================= */}
+            {/* SOCIAL LINKS */}
+            {/* ================================= */}
+
+            <div className="flex gap-4">
+
+              {githubUrl && (
+                <a
+                  href={githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                  title="GitHub"
+                  className="rounded-xl border border-white/10 bg-white/5 p-3 text-gray-300 transition duration-300 hover:-translate-y-1 hover:border-purple-500 hover:text-purple-400"
+                >
+                  <GitHubIcon
+                    size={21}
+                  />
+                </a>
+              )}
+
+              {linkedinUrl && (
+                <a
+                  href={linkedinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn"
+                  title="LinkedIn"
+                  className="rounded-xl border border-white/10 bg-white/5 p-3 text-gray-300 transition duration-300 hover:-translate-y-1 hover:border-purple-500 hover:text-purple-400"
+                >
+                  <LinkedInIcon
+                    size={21}
+                  />
+                </a>
+              )}
+
+              {email && (
+                <a
+                  href={`mailto:${email}`}
+                  aria-label="Email"
+                  title="Email"
+                  className="rounded-xl border border-white/10 bg-white/5 p-3 text-gray-300 transition duration-300 hover:-translate-y-1 hover:border-purple-500 hover:text-purple-400"
+                >
+                  <Mail
+                    size={21}
+                  />
+                </a>
+              )}
+
+            </div>
+
+          </div>
+
+          {/* ================================= */}
+          {/* PROFILE IMAGE */}
+          {/* MOBILE: FIRST */}
+          {/* DESKTOP: RIGHT */}
+          {/* ================================= */}
+
+          <div className="order-1 relative flex min-h-[360px] items-center justify-center sm:min-h-[500px] lg:order-2">
+
+            {/* Main glow */}
+
+            <div className="absolute h-[280px] w-[280px] rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 opacity-20 blur-[70px] sm:h-[340px] sm:w-[340px]" />
+
+            {/* Outer ring */}
+
+            <div className="absolute h-[320px] w-[320px] rounded-full border border-purple-500/20 sm:h-[410px] sm:w-[410px]" />
+
+            {/* Inner ring */}
+
+            <div className="absolute h-[290px] w-[290px] rounded-full border border-fuchsia-500/20 sm:h-[370px] sm:w-[370px]" />
+
+            {/* Profile picture */}
+
+            <div className="relative z-10 flex h-[240px] w-[240px] items-center justify-center overflow-hidden rounded-full border-2 border-purple-400/40 bg-[#10142b] shadow-[0_0_60px_rgba(168,85,247,0.2)] sm:h-[320px] sm:w-[320px]">
+
+              {profileImageUrl ? (
+                <img
+                  src={profileImageUrl}
+                  alt={fullName}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="flex flex-col items-center gap-3 text-gray-600">
+
+                  <UserRound
+                    size={90}
+                  />
+
+                  <p className="text-sm">
+                    Upload photo from Admin
+                  </p>
+
+                </div>
+              )}
+
+            </div>
+
+            {/* Decorative dots */}
+
+            <div className="absolute right-[8%] top-[16%] h-3 w-3 rounded-full bg-purple-400 shadow-[0_0_20px_rgba(192,132,252,0.8)] sm:right-[10%] sm:top-[18%]" />
+
+            <div className="absolute bottom-[18%] left-[8%] h-2 w-2 rounded-full bg-pink-400 shadow-[0_0_20px_rgba(244,114,182,0.8)] sm:bottom-[20%] sm:left-[12%]" />
+
+          </div>
+
+        </div>
+
+      </section>
+    );
+  }
+
+  /* ================================= */
+  /* LIGHT THEME */
+  /* DESIGN #2 */
   /* ================================= */
 
   return (
     <section
       id="home"
-      className="relative flex min-h-screen items-center overflow-hidden px-6 pb-20 pt-28 lg:px-8"
+      className="relative flex min-h-screen items-center overflow-hidden bg-[#f8fafc] px-6 pb-20 pt-32 text-slate-900 transition-colors duration-300 lg:px-8"
     >
-      {/* ================================= */}
-      {/* BACKGROUND EFFECTS */}
-      {/* ================================= */}
-
-      <div className="pointer-events-none absolute right-[-100px] top-[80px] h-[420px] w-[420px] rounded-full bg-purple-600/20 blur-[120px]" />
-
-      <div className="pointer-events-none absolute bottom-[-150px] left-[-100px] h-[400px] w-[400px] rounded-full bg-pink-600/10 blur-[130px]" />
-
-      <div className="pointer-events-none absolute left-[45%] top-[20%] h-[250px] w-[250px] rounded-full bg-indigo-600/10 blur-[100px]" />
 
       {/* ================================= */}
-      {/* MAIN CONTAINER */}
+      {/* LIGHT BACKGROUND DECORATION */}
       {/* ================================= */}
 
-      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-16 lg:grid-cols-2 lg:gap-20">
+      <div className="pointer-events-none absolute inset-0">
+
+        <div className="absolute right-[-160px] top-[-120px] h-[420px] w-[420px] rounded-full bg-violet-200/50 blur-[120px]" />
+
+        <div className="absolute bottom-[-200px] left-[-100px] h-[380px] w-[380px] rounded-full bg-blue-100/70 blur-[120px]" />
+
+        <div className="absolute left-1/2 top-[35%] h-[250px] w-[250px] rounded-full bg-fuchsia-100/50 blur-[100px]" />
+
+      </div>
+
+      {/* ================================= */}
+      {/* CONTAINER */}
+      {/* ================================= */}
+
+      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-16 lg:grid-cols-[1.08fr_0.92fr] lg:gap-24">
 
         {/* ================================= */}
         {/* LEFT SIDE */}
         {/* ================================= */}
 
-        <div>
-          <p className="mb-3 text-lg text-gray-300">
-            Hi, I'm
+        <div className="order-2 lg:order-1">
+
+          {/* Small intro */}
+
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-white px-4 py-2 text-sm font-medium text-violet-700 shadow-sm">
+
+            <span className="h-2 w-2 rounded-full bg-violet-600" />
+
+            Welcome to my portfolio
+
+          </div>
+
+          {/* Intro */}
+
+          <p className="mb-3 text-lg font-medium text-slate-500">
+            Hello, I'm
           </p>
 
-          <h1 className="gradient-text mb-5 text-3xl font-bold leading-[1.05] sm:text-6xl lg:text-5xl">
+          {/* Name */}
+
+          <h1 className="mb-5 text-4xl font-bold leading-[1.05] tracking-tight text-slate-950 sm:text-6xl lg:text-6xl">
+
             {fullName}
+
           </h1>
 
-          <h2 className="mb-6 text-xl font-semibold leading-relaxed text-gray-200 sm:text-3xl">
+          {/* Headline */}
+
+          <h2 className="mb-6 max-w-2xl text-2xl font-semibold leading-snug text-violet-700 sm:text-3xl">
+
             {headline}
+
           </h2>
 
-          <p className="mb-7 max-w-xl text-base leading-8 text-gray-400 sm:text-lg">
+          {/* Bio */}
+
+          <p className="mb-7 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
+
             {bio}
+
           </p>
 
           {/* Location */}
 
           {location && (
-            <div className="mb-8 flex items-center gap-2 text-sm text-gray-500">
+            <div className="mb-8 flex items-center gap-2 text-sm font-medium text-slate-500">
 
-              <MapPin size={17} />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 text-violet-600">
+
+                <MapPin
+                  size={16}
+                />
+
+              </div>
 
               <span>
                 {location}
@@ -181,32 +489,36 @@ function Hero() {
           )}
 
           {/* ================================= */}
-          {/* MAIN BUTTONS */}
+          {/* BUTTONS */}
           {/* ================================= */}
 
-          <div className="mb-9 flex flex-wrap gap-4">
+          <div className="mb-9 flex flex-wrap gap-3">
 
-            {/* View Projects */}
+            {/* Primary */}
 
             <a
               href="#projects"
-              className="gradient-button flex items-center gap-2 rounded-xl px-6 py-3 font-semibold text-white"
+              className="flex items-center gap-2 rounded-xl bg-slate-950 px-6 py-3.5 font-semibold text-white shadow-lg shadow-slate-900/10 transition duration-300 hover:-translate-y-0.5 hover:bg-violet-700"
             >
               View Projects
 
-              <ArrowRight size={18} />
+              <ArrowRight
+                size={18}
+              />
             </a>
 
-            {/* Download Resume */}
+            {/* Resume */}
 
             {resumeUrl && (
               <a
                 href={resumeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 rounded-xl border border-purple-400/30 bg-white/5 px-6 py-3 font-semibold text-gray-200 transition duration-300 hover:-translate-y-0.5 hover:border-purple-400 hover:bg-purple-500/10 hover:text-white"
+                className="flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-3.5 font-semibold text-slate-700 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-violet-300 hover:text-violet-700"
               >
-                <Download size={18} />
+                <Download
+                  size={18}
+                />
 
                 Download Resume
               </a>
@@ -216,7 +528,7 @@ function Hero() {
 
             <a
               href="#contact"
-              className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-6 py-3 font-semibold text-gray-300 transition duration-300 hover:border-purple-500/40 hover:bg-purple-500/10 hover:text-white"
+              className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-100 px-6 py-3.5 font-semibold text-slate-700 transition duration-300 hover:-translate-y-0.5 hover:bg-violet-50 hover:text-violet-700"
             >
               Contact Me
             </a>
@@ -224,12 +536,16 @@ function Hero() {
           </div>
 
           {/* ================================= */}
-          {/* SOCIAL LINKS */}
+          {/* SOCIAL AREA */}
           {/* ================================= */}
 
-          <div className="flex gap-4">
+          <div className="flex flex-wrap items-center gap-4">
 
-            {/* GitHub */}
+            <span className="text-sm font-medium text-slate-400">
+              Connect
+            </span>
+
+            <div className="h-px w-8 bg-slate-300" />
 
             {githubUrl && (
               <a
@@ -238,13 +554,13 @@ function Hero() {
                 rel="noopener noreferrer"
                 aria-label="GitHub"
                 title="GitHub"
-                className="rounded-xl border border-white/10 bg-white/5 p-3 text-gray-300 transition duration-300 hover:-translate-y-1 hover:border-purple-500 hover:text-purple-400"
+                className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-violet-300 hover:text-violet-700"
               >
-                <GitHubIcon size={21} />
+                <GitHubIcon
+                  size={20}
+                />
               </a>
             )}
-
-            {/* LinkedIn */}
 
             {linkedinUrl && (
               <a
@@ -253,81 +569,141 @@ function Hero() {
                 rel="noopener noreferrer"
                 aria-label="LinkedIn"
                 title="LinkedIn"
-                className="rounded-xl border border-white/10 bg-white/5 p-3 text-gray-300 transition duration-300 hover:-translate-y-1 hover:border-purple-500 hover:text-purple-400"
+                className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-violet-300 hover:text-violet-700"
               >
-                <LinkedInIcon size={21} />
+                <LinkedInIcon
+                  size={20}
+                />
               </a>
             )}
-
-            {/* Email */}
 
             {email && (
               <a
                 href={`mailto:${email}`}
                 aria-label="Email"
                 title="Email"
-                className="rounded-xl border border-white/10 bg-white/5 p-3 text-gray-300 transition duration-300 hover:-translate-y-1 hover:border-purple-500 hover:text-purple-400"
+                className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-violet-300 hover:text-violet-700"
               >
-                <Mail size={21} />
+                <Mail
+                  size={20}
+                />
               </a>
             )}
 
           </div>
+
         </div>
 
         {/* ================================= */}
         {/* RIGHT SIDE */}
+        {/* LIGHT DESIGN #2 PROFILE */}
         {/* ================================= */}
 
-        <div className="relative flex min-h-[450px] items-center justify-center sm:min-h-[500px]">
+        <div className="order-1 flex justify-center lg:order-2 lg:justify-end">
 
-          {/* Main glow */}
+          <div className="relative w-full max-w-[440px]">
 
-          <div className="absolute h-[340px] w-[340px] rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 opacity-20 blur-[70px]" />
+            {/* Decorative block */}
 
-          {/* Outer ring */}
+            <div className="absolute -right-5 -top-5 hidden h-28 w-28 rounded-3xl border border-violet-200 bg-violet-100/60 sm:block" />
 
-          <div className="absolute h-[410px] w-[410px] rounded-full border border-purple-500/20" />
+            {/* Small dot pattern */}
 
-          {/* Inner ring */}
+            <div className="absolute -bottom-7 -left-7 hidden grid-cols-5 gap-2 sm:grid">
 
-          <div className="absolute h-[370px] w-[370px] rounded-full border border-fuchsia-500/20" />
+              {Array.from({
+                length: 25,
+              }).map((_, index) => (
+                <span
+                  key={index}
+                  className="h-1.5 w-1.5 rounded-full bg-violet-300"
+                />
+              ))}
 
-          {/* Profile picture */}
+            </div>
 
-          <div className="relative z-10 flex h-[290px] w-[290px] items-center justify-center overflow-hidden rounded-full border-2 border-purple-400/40 bg-[#10142b] shadow-[0_0_60px_rgba(168,85,247,0.2)] sm:h-[320px] sm:w-[320px]">
+            {/* Main profile card */}
 
-            {profileImageUrl ? (
-              <img
-                src={profileImageUrl}
-                alt={fullName}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <div className="flex flex-col items-center gap-3 text-gray-600">
+            <div className="relative overflow-hidden rounded-[32px] border border-slate-200 bg-white p-3 shadow-[0_25px_70px_rgba(15,23,42,0.12)]">
 
-                <UserRound size={100} />
+              {/* Image */}
 
-                <p className="text-sm">
-                  Upload photo from Admin
-                </p>
+              <div className="relative aspect-[4/5] overflow-hidden rounded-[26px] bg-gradient-to-br from-slate-100 via-violet-50 to-slate-100">
+
+                {profileImageUrl ? (
+                  <img
+                    src={profileImageUrl}
+                    alt={fullName}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full flex-col items-center justify-center gap-4 text-slate-400">
+
+                    <div className="flex h-28 w-28 items-center justify-center rounded-full bg-white shadow-sm">
+
+                      <UserRound
+                        size={70}
+                      />
+
+                    </div>
+
+                    <p className="text-sm">
+                      Upload photo from Admin
+                    </p>
+
+                  </div>
+                )}
+
+                {/* Bottom gradient */}
+
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-950/40 to-transparent" />
+
+                {/* ================================= */}
+                {/* AVAILABLE LABEL */}
+                {/* MOBILE / TABLET ONLY */}
+                {/* HIDDEN ON DESKTOP */}
+                {/* ================================= */}
+
+                <div className="absolute bottom-5 left-5 right-5 lg:hidden">
+
+                  <div className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/90 px-3 py-1.5 text-xs font-semibold text-slate-800 shadow-sm backdrop-blur">
+
+                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+
+                    Available for opportunities
+
+                  </div>
+
+                </div>
 
               </div>
-            )}
+
+            </div>
+
+            {/* Floating professional card */}
+
+            <div className="absolute -bottom-8 -left-5 hidden min-w-[210px] rounded-2xl border border-slate-200 bg-white p-4 shadow-xl shadow-slate-900/10 sm:block">
+
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-violet-600">
+                Focus
+              </p>
+
+              <p className="mt-1 text-sm font-semibold text-slate-900">
+                AI • ML • Software
+              </p>
+
+              <p className="mt-1 text-xs text-slate-500">
+                Building intelligent solutions
+              </p>
+
+            </div>
 
           </div>
-
-          {/* Decorative dot */}
-
-          <div className="absolute right-[10%] top-[18%] h-3 w-3 rounded-full bg-purple-400 shadow-[0_0_20px_rgba(192,132,252,0.8)]" />
-
-          {/* Decorative dot */}
-
-          <div className="absolute bottom-[20%] left-[12%] h-2 w-2 rounded-full bg-pink-400 shadow-[0_0_20px_rgba(244,114,182,0.8)]" />
 
         </div>
 
       </div>
+
     </section>
   );
 }

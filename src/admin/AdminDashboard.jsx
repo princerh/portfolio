@@ -27,6 +27,7 @@ import EducationManager from "./EducationManager";
 import ExperienceManager from "./ExperienceManager";
 import DocumentManager from "./DocumentManager";
 import MessageManager from "./MessageManager";
+import SettingsManager from "./SettingsManager";
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -435,11 +436,7 @@ function AdminDashboard() {
             {/* Settings */}
 
             {activeSection === "Settings" && (
-              <ComingSoonSection
-                title="Settings"
-                description="Manage general portfolio settings and administration preferences."
-                icon={Settings}
-              />
+            <SettingsManager /> 
             )}
 
           </div>

@@ -13,6 +13,10 @@ import {
 
 import { supabase } from "../services/supabase";
 
+import {
+  useTheme,
+} from "../context/ThemeContext";
+
 function Projects() {
   const [projects, setProjects] =
     useState([]);
@@ -23,8 +27,17 @@ function Projects() {
   const [errorMessage, setErrorMessage] =
     useState("");
 
-  const [activeCategory, setActiveCategory] =
-    useState("All");
+  const [
+    activeCategory,
+    setActiveCategory,
+  ] = useState("All");
+
+  const {
+    theme,
+  } = useTheme();
+
+  const isDark =
+    theme === "dark";
 
   useEffect(() => {
     loadProjects();
@@ -54,7 +67,9 @@ function Projects() {
         throw error;
       }
 
-      setProjects(data || []);
+      setProjects(
+        data || []
+      );
     } catch (error) {
       console.error(
         "Unable to load projects:",
@@ -125,7 +140,11 @@ function Projects() {
     return (
       <section
         id="projects"
-        className="relative px-6 py-24 lg:px-8"
+        className={`relative px-6 py-24 transition-colors duration-300 lg:px-8 ${
+          isDark
+            ? "bg-[#050816]"
+            : "bg-white"
+        }`}
       >
         <div className="mx-auto flex min-h-[400px] max-w-7xl items-center justify-center">
 
@@ -133,10 +152,20 @@ function Projects() {
 
             <Loader2
               size={36}
-              className="mx-auto animate-spin text-purple-400"
+              className={`mx-auto animate-spin ${
+                isDark
+                  ? "text-purple-400"
+                  : "text-violet-600"
+              }`}
             />
 
-            <p className="mt-4 text-sm text-gray-500">
+            <p
+              className={`mt-4 text-sm ${
+                isDark
+                  ? "text-gray-500"
+                  : "text-slate-500"
+              }`}
+            >
               Loading projects...
             </p>
 
@@ -148,48 +177,208 @@ function Projects() {
   }
 
   /* ================================= */
-  /* PAGE */
+  /* DARK THEME */
+  /* ================================= */
+
+  if (isDark) {
+    return (
+      <section
+        id="projects"
+        className="relative overflow-hidden px-6 py-24 lg:px-8"
+      >
+
+        {/* Background decoration */}
+
+        <div className="pointer-events-none absolute left-[-150px] top-[20%] h-[400px] w-[400px] rounded-full bg-purple-600/10 blur-[130px]" />
+
+        <div className="pointer-events-none absolute bottom-[-150px] right-[-100px] h-[400px] w-[400px] rounded-full bg-pink-600/10 blur-[130px]" />
+
+        <div className="relative mx-auto max-w-7xl">
+
+          {/* ================================= */}
+          {/* HEADER */}
+          {/* ================================= */}
+
+          <div className="mx-auto mb-12 max-w-3xl text-center">
+
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-purple-400">
+              My Work
+            </p>
+
+            <h2 className="mt-4 text-4xl font-bold sm:text-5xl">
+
+              Featured{" "}
+
+              <span className="gradient-text">
+                Projects
+              </span>
+
+            </h2>
+
+            <p className="mt-5 leading-7 text-gray-400">
+              A selection of my software
+              engineering, AI/ML and research
+              projects.
+            </p>
+
+          </div>
+
+          {/* Error */}
+
+          {errorMessage && (
+            <div className="mx-auto mb-8 max-w-2xl rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-center text-sm text-red-300">
+              {errorMessage}
+            </div>
+          )}
+
+          {/* Category filters */}
+
+          {categories.length > 1 && (
+            <div className="mb-12 flex flex-wrap justify-center gap-3">
+
+              {categories.map(
+                (category) => {
+                  const isActive =
+                    activeCategory ===
+                    category;
+
+                  return (
+                    <button
+                      key={category}
+                      type="button"
+                      onClick={() =>
+                        setActiveCategory(
+                          category
+                        )
+                      }
+                      className={`rounded-full border px-5 py-2 text-sm font-medium transition duration-300 ${
+                        isActive
+                          ? "border-purple-500/50 bg-purple-500/20 text-purple-200 shadow-[0_0_25px_rgba(168,85,247,0.15)]"
+                          : "border-white/10 bg-white/5 text-gray-400 hover:border-purple-500/30 hover:bg-purple-500/10 hover:text-purple-300"
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  );
+                }
+              )}
+
+            </div>
+          )}
+
+          {/* No projects */}
+
+          {projects.length === 0 && (
+            <div className="glass-card flex min-h-[300px] flex-col items-center justify-center rounded-3xl p-8 text-center">
+
+              <FolderKanban
+                size={52}
+                className="text-gray-600"
+              />
+
+              <h3 className="mt-5 text-xl font-semibold">
+                No projects available
+              </h3>
+
+              <p className="mt-3 max-w-md leading-7 text-gray-500">
+                Projects added from the admin
+                dashboard will automatically
+                appear here.
+              </p>
+
+            </div>
+          )}
+
+          {/* Empty filter */}
+
+          {projects.length > 0 &&
+            filteredProjects.length ===
+              0 && (
+              <div className="py-20 text-center">
+
+                <FolderKanban
+                  size={45}
+                  className="mx-auto text-gray-700"
+                />
+
+                <p className="mt-4 text-gray-500">
+                  No projects in this
+                  category.
+                </p>
+
+              </div>
+            )}
+
+          {/* Grid */}
+
+          {filteredProjects.length > 0 && (
+            <div className="grid gap-7 md:grid-cols-2 xl:grid-cols-3">
+
+              {filteredProjects.map(
+                (project) => (
+                  <DarkProjectCard
+                    key={project.id}
+                    project={project}
+                  />
+                )
+              )}
+
+            </div>
+          )}
+
+        </div>
+      </section>
+    );
+  }
+
+  /* ================================= */
+  /* LIGHT THEME */
+  /* DESIGN #2 */
   /* ================================= */
 
   return (
     <section
       id="projects"
-      className="relative overflow-hidden px-6 py-24 lg:px-8"
+      className="relative overflow-hidden bg-white px-6 py-24 text-slate-900 lg:px-8"
     >
-      {/* Background decoration */}
 
-      <div className="pointer-events-none absolute left-[-150px] top-[20%] h-[400px] w-[400px] rounded-full bg-purple-600/10 blur-[130px]" />
+      {/* Background */}
 
-      <div className="pointer-events-none absolute bottom-[-150px] right-[-100px] h-[400px] w-[400px] rounded-full bg-pink-600/10 blur-[130px]" />
+      <div className="pointer-events-none absolute inset-0">
+
+        <div className="absolute left-[-180px] top-[10%] h-[400px] w-[400px] rounded-full bg-violet-100/60 blur-[120px]" />
+
+        <div className="absolute bottom-[-180px] right-[-120px] h-[380px] w-[380px] rounded-full bg-blue-100/70 blur-[120px]" />
+
+      </div>
 
       <div className="relative mx-auto max-w-7xl">
 
         {/* ================================= */}
-        {/* SECTION HEADER */}
+        {/* LIGHT HEADER */}
         {/* ================================= */}
 
         <div className="mx-auto mb-12 max-w-3xl text-center">
 
-          <p className="text-sm font-semibold uppercase tracking-[0.25em] text-purple-400">
-            My Work
-          </p>
+          <div className="mb-4 inline-flex rounded-full border border-violet-200 bg-violet-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-violet-700">
+            Selected Work
+          </div>
 
-          <h2 className="mt-4 text-4xl font-bold sm:text-5xl">
+          <h2 className="text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">
 
-            Featured{" "}
+            Projects that bring{" "}
 
-            <span className="gradient-text">
-              Projects
+            <span className="text-violet-700">
+              ideas to life
             </span>
 
           </h2>
 
-          <p className="mt-5 leading-7 text-gray-400">
-
-            A selection of my software
-            engineering, AI/ML and research
-            projects.
-
+          <p className="mx-auto mt-5 max-w-2xl leading-7 text-slate-600">
+            A collection of software
+            engineering, artificial
+            intelligence, machine learning
+            and research projects.
           </p>
 
         </div>
@@ -199,13 +388,13 @@ function Projects() {
         {/* ================================= */}
 
         {errorMessage && (
-          <div className="mx-auto mb-8 max-w-2xl rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-center text-sm text-red-300">
+          <div className="mx-auto mb-8 max-w-2xl rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm text-red-700">
             {errorMessage}
           </div>
         )}
 
         {/* ================================= */}
-        {/* CATEGORY FILTERS */}
+        {/* LIGHT CATEGORY FILTERS */}
         {/* ================================= */}
 
         {categories.length > 1 && (
@@ -213,7 +402,6 @@ function Projects() {
 
             {categories.map(
               (category) => {
-
                 const isActive =
                   activeCategory ===
                   category;
@@ -227,10 +415,10 @@ function Projects() {
                         category
                       )
                     }
-                    className={`rounded-full border px-5 py-2 text-sm font-medium transition duration-300 ${
+                    className={`rounded-full border px-5 py-2.5 text-sm font-medium transition duration-300 ${
                       isActive
-                        ? "border-purple-500/50 bg-purple-500/20 text-purple-200 shadow-[0_0_25px_rgba(168,85,247,0.15)]"
-                        : "border-white/10 bg-white/5 text-gray-400 hover:border-purple-500/30 hover:bg-purple-500/10 hover:text-purple-300"
+                        ? "border-violet-700 bg-violet-700 text-white shadow-md shadow-violet-700/15"
+                        : "border-slate-200 bg-white text-slate-600 shadow-sm hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700"
                     }`}
                   >
                     {category}
@@ -247,18 +435,21 @@ function Projects() {
         {/* ================================= */}
 
         {projects.length === 0 && (
-          <div className="glass-card flex min-h-[300px] flex-col items-center justify-center rounded-3xl p-8 text-center">
+          <div className="flex min-h-[300px] flex-col items-center justify-center rounded-3xl border border-slate-200 bg-slate-50 p-8 text-center">
 
-            <FolderKanban
-              size={52}
-              className="text-gray-600"
-            />
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-100 text-violet-600">
 
-            <h3 className="mt-5 text-xl font-semibold">
+              <FolderKanban
+                size={30}
+              />
+
+            </div>
+
+            <h3 className="mt-5 text-xl font-semibold text-slate-900">
               No projects available
             </h3>
 
-            <p className="mt-3 max-w-md leading-7 text-gray-500">
+            <p className="mt-3 max-w-md leading-7 text-slate-500">
               Projects added from the admin
               dashboard will automatically
               appear here.
@@ -268,7 +459,7 @@ function Projects() {
         )}
 
         {/* ================================= */}
-        {/* FILTER EMPTY */}
+        {/* EMPTY FILTER */}
         {/* ================================= */}
 
         {projects.length > 0 &&
@@ -278,10 +469,10 @@ function Projects() {
 
               <FolderKanban
                 size={45}
-                className="mx-auto text-gray-700"
+                className="mx-auto text-slate-300"
               />
 
-              <p className="mt-4 text-gray-500">
+              <p className="mt-4 text-slate-500">
                 No projects in this
                 category.
               </p>
@@ -290,7 +481,7 @@ function Projects() {
           )}
 
         {/* ================================= */}
-        {/* PROJECT GRID */}
+        {/* LIGHT PROJECT GRID */}
         {/* ================================= */}
 
         {filteredProjects.length > 0 && (
@@ -298,7 +489,7 @@ function Projects() {
 
             {filteredProjects.map(
               (project) => (
-                <PublicProjectCard
+                <LightProjectCard
                   key={project.id}
                   project={project}
                 />
@@ -315,10 +506,10 @@ function Projects() {
 
 
 /* ================================= */
-/* PROJECT CARD */
+/* DARK PROJECT CARD */
 /* ================================= */
 
-function PublicProjectCard({
+function DarkProjectCard({
   project,
 }) {
   const technologies =
@@ -331,16 +522,18 @@ function PublicProjectCard({
   return (
     <article className="glass-card group flex h-full flex-col overflow-hidden rounded-3xl transition duration-300 hover:-translate-y-2 hover:border-purple-500/30 hover:shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
 
-      {/* ================================= */}
-      {/* PROJECT IMAGE */}
-      {/* ================================= */}
+      {/* Image */}
 
       <div className="relative aspect-[16/10] overflow-hidden bg-white/5">
 
         {project.image_url ? (
           <img
-            src={project.image_url}
-            alt={project.title}
+            src={
+              project.image_url
+            }
+            alt={
+              project.title
+            }
             className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
           />
         ) : (
@@ -354,11 +547,9 @@ function PublicProjectCard({
           </div>
         )}
 
-        {/* Overlay */}
-
         <div className="absolute inset-0 bg-gradient-to-t from-[#070a17]/80 via-transparent to-transparent opacity-70" />
 
-        {/* Featured Badge */}
+        {/* Featured */}
 
         {project.featured && (
           <div className="absolute left-4 top-4 flex items-center gap-1.5 rounded-full border border-yellow-300/20 bg-yellow-400/90 px-3 py-1.5 text-xs font-semibold text-black shadow-lg">
@@ -379,9 +570,7 @@ function PublicProjectCard({
           <div className="absolute bottom-4 left-4">
 
             <span className="rounded-full border border-white/10 bg-[#090c1b]/80 px-3 py-1.5 text-xs font-medium text-purple-300 backdrop-blur-md">
-
               {project.category}
-
             </span>
 
           </div>
@@ -389,9 +578,7 @@ function PublicProjectCard({
 
       </div>
 
-      {/* ================================= */}
-      {/* PROJECT CONTENT */}
-      {/* ================================= */}
+      {/* Content */}
 
       <div className="flex flex-1 flex-col p-6">
 
@@ -401,15 +588,11 @@ function PublicProjectCard({
 
         {project.short_description && (
           <p className="mt-3 leading-7 text-gray-400">
-
             {project.short_description}
-
           </p>
         )}
 
-        {/* ================================= */}
-        {/* TECHNOLOGIES */}
-        {/* ================================= */}
+        {/* Technologies */}
 
         {technologies.length > 0 && (
           <div className="mt-5 flex flex-wrap gap-2">
@@ -444,13 +627,9 @@ function PublicProjectCard({
           </div>
         )}
 
-        {/* Push links to bottom */}
-
         <div className="flex-1" />
 
-        {/* ================================= */}
-        {/* PROJECT LINKS */}
-        {/* ================================= */}
+        {/* Links */}
 
         {(project.github_url ||
           project.demo_url) && (
@@ -465,13 +644,11 @@ function PublicProjectCard({
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-gray-300 transition hover:border-purple-500/40 hover:bg-purple-500/10 hover:text-purple-300"
               >
-
                 <GitHubIcon
                   size={17}
                 />
 
                 GitHub
-
               </a>
             )}
 
@@ -484,13 +661,204 @@ function PublicProjectCard({
                 rel="noopener noreferrer"
                 className="gradient-button flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-white"
               >
-
                 Live Demo
 
                 <ExternalLink
                   size={16}
                 />
+              </a>
+            )}
 
+          </div>
+        )}
+
+      </div>
+
+    </article>
+  );
+}
+
+
+/* ================================= */
+/* LIGHT PROJECT CARD */
+/* ================================= */
+
+function LightProjectCard({
+  project,
+}) {
+  const technologies =
+    Array.isArray(
+      project.technologies
+    )
+      ? project.technologies
+      : [];
+
+  return (
+    <article className="group flex h-full flex-col overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_10px_40px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-2 hover:border-violet-200 hover:shadow-[0_22px_60px_rgba(15,23,42,0.12)]">
+
+      {/* ================================= */}
+      {/* IMAGE */}
+      {/* ================================= */}
+
+      <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
+
+        {project.image_url ? (
+          <img
+            src={
+              project.image_url
+            }
+            alt={
+              project.title
+            }
+            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center bg-gradient-to-br from-slate-50 to-violet-50">
+
+            <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-white text-violet-300 shadow-sm">
+
+              <FolderKanban
+                size={38}
+              />
+
+            </div>
+
+          </div>
+        )}
+
+        {/* Subtle image overlay */}
+
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/15 via-transparent to-transparent" />
+
+        {/* Featured */}
+
+        {project.featured && (
+          <div className="absolute left-4 top-4 flex items-center gap-1.5 rounded-full border border-amber-200 bg-white/95 px-3 py-1.5 text-xs font-semibold text-amber-700 shadow-sm backdrop-blur-md">
+
+            <Star
+              size={13}
+              fill="currentColor"
+            />
+
+            Featured
+
+          </div>
+        )}
+
+        {/* Category */}
+
+        {project.category && (
+          <div className="absolute bottom-4 left-4">
+
+            <span className="rounded-full border border-white/80 bg-white/90 px-3 py-1.5 text-xs font-semibold text-violet-700 shadow-sm backdrop-blur-md">
+              {project.category}
+            </span>
+
+          </div>
+        )}
+
+      </div>
+
+      {/* ================================= */}
+      {/* CONTENT */}
+      {/* ================================= */}
+
+      <div className="flex flex-1 flex-col p-6">
+
+        <div className="mb-1 flex items-start justify-between gap-4">
+
+          <h3 className="text-xl font-bold tracking-tight text-slate-900 transition group-hover:text-violet-700">
+            {project.title}
+          </h3>
+
+          <div className="mt-1 h-2 w-2 shrink-0 rounded-full bg-violet-500 opacity-0 transition group-hover:opacity-100" />
+
+        </div>
+
+        {project.short_description && (
+          <p className="mt-3 leading-7 text-slate-600">
+            {project.short_description}
+          </p>
+        )}
+
+        {/* ================================= */}
+        {/* TECHNOLOGIES */}
+        {/* ================================= */}
+
+        {technologies.length > 0 && (
+          <div className="mt-5 flex flex-wrap gap-2">
+
+            {technologies
+              .slice(0, 6)
+              .map(
+                (
+                  technology,
+                  index
+                ) => (
+                  <span
+                    key={`${technology}-${index}`}
+                    className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-medium text-slate-600 transition group-hover:border-violet-100 group-hover:bg-violet-50 group-hover:text-violet-700"
+                  >
+                    {technology}
+                  </span>
+                )
+              )}
+
+            {technologies.length >
+              6 && (
+              <span className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-400">
+
+                +
+                {technologies.length -
+                  6}
+
+              </span>
+            )}
+
+          </div>
+        )}
+
+        <div className="flex-1" />
+
+        {/* ================================= */}
+        {/* LINKS */}
+        {/* ================================= */}
+
+        {(project.github_url ||
+          project.demo_url) && (
+          <div className="mt-6 flex flex-wrap gap-3 border-t border-slate-100 pt-5">
+
+            {project.github_url && (
+              <a
+                href={
+                  project.github_url
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700"
+              >
+                <GitHubIcon
+                  size={17}
+                />
+
+                GitHub
+              </a>
+            )}
+
+            {project.demo_url && (
+              <a
+                href={
+                  project.demo_url
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-violet-700"
+              >
+                Live Demo
+
+                <ExternalLink
+                  size={16}
+                />
               </a>
             )}
 

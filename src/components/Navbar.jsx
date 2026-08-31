@@ -1,5 +1,7 @@
 import {
   Menu,
+  Moon,
+  Sun,
   X,
 } from "lucide-react";
 
@@ -7,6 +9,10 @@ import {
   useEffect,
   useState,
 } from "react";
+
+import {
+  useTheme,
+} from "../context/ThemeContext";
 
 const navItems = [
   {
@@ -46,6 +52,11 @@ function Navbar() {
   const [scrolled, setScrolled] =
     useState(false);
 
+  const {
+    theme,
+    toggleTheme,
+  } = useTheme();
+
   useEffect(() => {
     function handleScroll() {
       setScrolled(
@@ -72,18 +83,27 @@ function Navbar() {
     setOpen(false);
   }
 
+  function handleThemeToggle() {
+    toggleTheme();
+  }
+
+  const isDark =
+    theme === "dark";
+
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${
+      className={`portfolio-navbar fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "border-b border-white/10 bg-[#050816]/85 shadow-lg shadow-black/10 backdrop-blur-xl"
-          : "bg-transparent"
+          ? "portfolio-navbar-scrolled"
+          : "portfolio-navbar-top"
       }`}
     >
 
       <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
 
-        {/* Logo */}
+        {/* ================================= */}
+        {/* LOGO */}
+        {/* ================================= */}
 
         <a
           href="#home"
@@ -93,7 +113,9 @@ function Navbar() {
           Prince.
         </a>
 
-        {/* Desktop */}
+        {/* ================================= */}
+        {/* DESKTOP NAVIGATION */}
+        {/* ================================= */}
 
         <div className="hidden items-center gap-7 lg:flex">
 
@@ -106,46 +128,126 @@ function Navbar() {
                 href={
                   item.href
                 }
-                className="text-sm font-medium text-gray-400 transition hover:text-purple-400"
+                className="portfolio-nav-link text-sm font-medium transition"
               >
                 {item.name}
               </a>
             )
           )}
 
+          {/* ================================= */}
+          {/* DESKTOP THEME BUTTON */}
+          {/* ================================= */}
+
+          <button
+            type="button"
+            onClick={
+              handleThemeToggle
+            }
+            aria-label={
+              isDark
+                ? "Switch to light theme"
+                : "Switch to dark theme"
+            }
+            title={
+              isDark
+                ? "Switch to light theme"
+                : "Switch to dark theme"
+            }
+            className="portfolio-theme-button flex h-10 w-10 items-center justify-center rounded-xl border transition duration-300"
+          >
+
+            {isDark ? (
+              <Sun
+                size={19}
+              />
+            ) : (
+              <Moon
+                size={19}
+              />
+            )}
+
+          </button>
+
         </div>
 
-        {/* Mobile button */}
+        {/* ================================= */}
+        {/* MOBILE ACTIONS */}
+        {/* ================================= */}
 
-        <button
-          type="button"
-          onClick={() =>
-            setOpen(
-              (current) =>
-                !current
-            )
-          }
-          aria-label="Toggle navigation"
-          aria-expanded={open}
-          className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-300 transition hover:border-purple-500/30 hover:text-purple-400 lg:hidden"
-        >
+        <div className="flex items-center gap-2 lg:hidden">
 
-          {open ? (
-            <X size={21} />
-          ) : (
-            <Menu size={21} />
-          )}
+          {/* Theme Button */}
 
-        </button>
+          <button
+            type="button"
+            onClick={
+              handleThemeToggle
+            }
+            aria-label={
+              isDark
+                ? "Switch to light theme"
+                : "Switch to dark theme"
+            }
+            title={
+              isDark
+                ? "Switch to light theme"
+                : "Switch to dark theme"
+            }
+            className="portfolio-theme-button flex h-10 w-10 items-center justify-center rounded-xl border transition duration-300"
+          >
+
+            {isDark ? (
+              <Sun
+                size={19}
+              />
+            ) : (
+              <Moon
+                size={19}
+              />
+            )}
+
+          </button>
+
+          {/* Menu Button */}
+
+          <button
+            type="button"
+            onClick={() =>
+              setOpen(
+                (current) =>
+                  !current
+              )
+            }
+            aria-label="Toggle navigation"
+            aria-expanded={open}
+            className="portfolio-mobile-menu-button flex h-10 w-10 items-center justify-center rounded-xl border transition duration-300"
+          >
+
+            {open ? (
+              <X
+                size={21}
+              />
+            ) : (
+              <Menu
+                size={21}
+              />
+            )}
+
+          </button>
+
+        </div>
 
       </nav>
 
-      {/* Mobile menu */}
+      {/* ================================= */}
+      {/* MOBILE MENU */}
+      {/* ================================= */}
 
       <div
-        className={`overflow-hidden border-t border-white/10 bg-[#070a17]/95 backdrop-blur-xl transition-all duration-300 lg:hidden ${
+        className={`portfolio-mobile-menu overflow-hidden backdrop-blur-xl transition-all duration-300 lg:hidden ${
           open
-            ? "max-h-[600px] opacity-100"
+            ? "max-h-[650px] border-t opacity-100"
             : "max-h-0 border-transparent opacity-0"
         }`}
       >
@@ -164,12 +266,68 @@ function Navbar() {
                 onClick={
                   closeMenu
                 }
-                className="block rounded-xl px-4 py-3 text-sm font-medium text-gray-400 transition hover:bg-purple-500/10 hover:text-purple-300"
+                className="portfolio-mobile-nav-link block rounded-xl px-4 py-3 text-sm font-medium transition"
               >
                 {item.name}
               </a>
             )
           )}
+
+          {/* ================================= */}
+          {/* MOBILE THEME INFORMATION */}
+          {/* ================================= */}
+
+          <div className="mt-4 border-t border-current/10 pt-4">
+
+            <div className="portfolio-theme-status flex items-center justify-between rounded-xl px-4 py-3">
+
+              <div className="flex items-center gap-3">
+
+                <div className="portfolio-theme-status-icon flex h-9 w-9 items-center justify-center rounded-lg">
+
+                  {isDark ? (
+                    <Moon
+                      size={17}
+                    />
+                  ) : (
+                    <Sun
+                      size={17}
+                    />
+                  )}
+
+                </div>
+
+                <div>
+
+                  <p className="text-sm font-medium">
+                    {isDark
+                      ? "Dark Theme"
+                      : "Light Theme"}
+                  </p>
+
+                  <p className="portfolio-theme-status-description mt-0.5 text-xs">
+                    Current appearance
+                  </p>
+
+                </div>
+
+              </div>
+
+              <button
+                type="button"
+                onClick={
+                  handleThemeToggle
+                }
+                className="portfolio-theme-switch rounded-lg px-3 py-2 text-xs font-medium transition"
+              >
+                {isDark
+                  ? "Light"
+                  : "Dark"}
+              </button>
+
+            </div>
+
+          </div>
 
         </div>
 

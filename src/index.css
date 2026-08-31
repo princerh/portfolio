@@ -108,6 +108,184 @@ select {
   background: rgba(168, 85, 247, 0.35);
 }
 
+
+
+/* ================================= */
+/* PORTFOLIO THEME ROOT */
+/* ================================= */
+
+html.portfolio-dark {
+  color-scheme: dark;
+}
+
+html.portfolio-light {
+  color-scheme: light;
+}
+
+html.portfolio-dark body {
+  background: #050816;
+}
+
+html.portfolio-light body {
+  background: #f8fafc;
+}
+
+/* ========================================= */
+/* NAVBAR THEME STYLES */
+/* ========================================= */
+
+
+/* ========================================= */
+/* DARK THEME */
+/* ========================================= */
+
+html.portfolio-dark .portfolio-navbar-top {
+  background: transparent;
+}
+
+html.portfolio-dark .portfolio-navbar-scrolled {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(5, 8, 22, 0.85);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+}
+
+html.portfolio-dark .portfolio-nav-link {
+  color: #9ca3af;
+}
+
+html.portfolio-dark .portfolio-nav-link:hover {
+  color: #c084fc;
+}
+
+html.portfolio-dark .portfolio-theme-button,
+html.portfolio-dark .portfolio-mobile-menu-button {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: #d1d5db;
+}
+
+html.portfolio-dark .portfolio-theme-button:hover,
+html.portfolio-dark .portfolio-mobile-menu-button:hover {
+  border-color: rgba(168, 85, 247, 0.4);
+  background: rgba(168, 85, 247, 0.1);
+  color: #c084fc;
+}
+
+html.portfolio-dark .portfolio-mobile-menu {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(7, 10, 23, 0.96);
+}
+
+html.portfolio-dark .portfolio-mobile-nav-link {
+  color: #9ca3af;
+}
+
+html.portfolio-dark .portfolio-mobile-nav-link:hover {
+  background: rgba(168, 85, 247, 0.1);
+  color: #d8b4fe;
+}
+
+html.portfolio-dark .portfolio-theme-status {
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+}
+
+html.portfolio-dark .portfolio-theme-status-icon {
+  background: rgba(168, 85, 247, 0.12);
+  color: #c084fc;
+}
+
+html.portfolio-dark .portfolio-theme-status-description {
+  color: #6b7280;
+}
+
+html.portfolio-dark .portfolio-theme-switch {
+  background: rgba(168, 85, 247, 0.12);
+  color: #d8b4fe;
+}
+
+html.portfolio-dark .portfolio-theme-switch:hover {
+  background: rgba(168, 85, 247, 0.22);
+}
+
+
+/* ========================================= */
+/* LIGHT THEME */
+/* ========================================= */
+
+html.portfolio-light .portfolio-navbar-top {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+}
+
+html.portfolio-light .portfolio-navbar-scrolled {
+  border-bottom: 1px solid #e5e7eb;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 6px 25px rgba(15, 23, 42, 0.06);
+  backdrop-filter: blur(20px);
+}
+
+html.portfolio-light .portfolio-nav-link {
+  color: #475569;
+}
+
+html.portfolio-light .portfolio-nav-link:hover {
+  color: #7c3aed;
+}
+
+html.portfolio-light .portfolio-theme-button,
+html.portfolio-light .portfolio-mobile-menu-button {
+  border-color: #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+html.portfolio-light .portfolio-theme-button:hover,
+html.portfolio-light .portfolio-mobile-menu-button:hover {
+  border-color: #c4b5fd;
+  background: #f5f3ff;
+  color: #7c3aed;
+}
+
+html.portfolio-light .portfolio-mobile-menu {
+  border-color: #e5e7eb;
+  background: rgba(255, 255, 255, 0.97);
+}
+
+html.portfolio-light .portfolio-mobile-nav-link {
+  color: #475569;
+}
+
+html.portfolio-light .portfolio-mobile-nav-link:hover {
+  background: #f5f3ff;
+  color: #7c3aed;
+}
+
+html.portfolio-light .portfolio-theme-status {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+html.portfolio-light .portfolio-theme-status-icon {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+html.portfolio-light .portfolio-theme-status-description {
+  color: #94a3b8;
+}
+
+html.portfolio-light .portfolio-theme-switch {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+html.portfolio-light .portfolio-theme-switch:hover {
+  background: #ddd6fe;
+}
+
 @media (max-width: 640px) {
   section {
     scroll-margin-top: 72px;
