@@ -814,10 +814,11 @@ function ProfileManager() {
 
           <div className="mt-4 rounded-2xl border border-purple-500/10 bg-purple-500/5 px-4 py-3">
             <p className="text-xs leading-5 text-gray-500">
-              Add only your public profile URLs.
-              These links can be displayed on your
-              public portfolio so visitors can access
-              your research and social profiles.
+              Add your public social and
+              research profile URLs.
+              Only links that you save
+              will appear on the public
+              portfolio.
             </p>
           </div>
 
@@ -1049,6 +1050,92 @@ function GoogleScholarIcon({
       aria-hidden="true"
     >
       <path d="M12 3 2 9l10 6 8-4.8V17h2V9L12 3Zm0 9.67L5.55 8.8 12 4.93l6.45 3.87L12 12.67ZM6 12.1V16c0 2.2 2.69 4 6 4s6-1.8 6-4v-3.9l-2 1.2V16c0 .84-1.58 2-4 2s-4-1.16-4-2v-2.7l-2-1.2Z" />
+    </svg>
+  );
+}
+
+
+/* ================================= */
+/* FACEBOOK SVG ICON */
+/* ================================= */
+
+function FacebookIcon({
+  size = 18,
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path d="M13.5 22v-8h2.7l.4-3.1h-3.1V8.9c0-.9.3-1.5 1.6-1.5h1.7V4.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.1H7.3V14h2.8v8h3.4Z" />
+    </svg>
+  );
+}
+
+/* ================================= */
+/* INSTAGRAM SVG ICON */
+/* ================================= */
+
+function InstagramIcon({
+  size = 18,
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <rect
+        x="3"
+        y="3"
+        width="18"
+        height="18"
+        rx="5"
+      />
+      <circle
+        cx="12"
+        cy="12"
+        r="4"
+      />
+      <circle
+        cx="17.5"
+        cy="6.5"
+        r="1"
+        fill="currentColor"
+        stroke="none"
+      />
+    </svg>
+  );
+}
+
+/* ================================= */
+/* X / TWITTER SVG ICON */
+/* ================================= */
+
+function XIcon({
+  size = 18,
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path d="M18.244 2H21.552L14.325 10.26L22.827 22H16.17L10.956 15.183L4.99 22H1.68L9.411 13.165L1.254 2H8.08L12.793 8.231L18.244 2ZM17.083 19.932H18.916L7.084 3.96H5.117L17.083 19.932Z" />
     </svg>
   );
 }
