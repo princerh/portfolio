@@ -160,6 +160,18 @@ function Hero() {
     profile?.google_scholar_url ||
     "";
 
+  const facebookUrl =
+    profile?.facebook_url ||
+    "";
+
+  const instagramUrl =
+    profile?.instagram_url ||
+    "";
+
+  const twitterUrl =
+    profile?.twitter_url ||
+    "";
+
   const profileImageUrl =
     profile?.profile_image_url ||
     "";
@@ -177,9 +189,7 @@ function Hero() {
         id="home"
         className="relative flex min-h-screen items-center overflow-hidden px-6 pb-20 pt-28 lg:px-8"
       >
-        {/* ================================= */}
-        {/* BACKGROUND EFFECTS */}
-        {/* ================================= */}
+        {/* Background Effects */}
 
         <div className="pointer-events-none absolute right-[-100px] top-[80px] h-[420px] w-[420px] rounded-full bg-purple-600/20 blur-[120px]" />
 
@@ -187,16 +197,10 @@ function Hero() {
 
         <div className="pointer-events-none absolute left-[45%] top-[20%] h-[250px] w-[250px] rounded-full bg-indigo-600/10 blur-[100px]" />
 
-        {/* ================================= */}
-        {/* MAIN CONTAINER */}
-        {/* ================================= */}
+        {/* Main Container */}
 
         <div className="relative mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-2 lg:gap-20">
-          {/* ================================= */}
-          {/* INTRODUCTION */}
-          {/* MOBILE: SECOND */}
-          {/* DESKTOP: LEFT */}
-          {/* ================================= */}
+          {/* Introduction */}
 
           <div className="order-2 lg:order-1">
             <p className="mb-3 text-lg text-gray-300">
@@ -229,13 +233,9 @@ function Hero() {
               </div>
             )}
 
-            {/* ================================= */}
-            {/* MAIN BUTTONS */}
-            {/* ================================= */}
+            {/* Main Buttons */}
 
             <div className="mb-9 flex flex-wrap gap-4">
-              {/* View Projects */}
-
               <a
                 href="#projects"
                 className="gradient-button flex items-center gap-2 rounded-xl px-6 py-3 font-semibold text-white"
@@ -246,8 +246,6 @@ function Hero() {
                   size={18}
                 />
               </a>
-
-              {/* Download Resume */}
 
               {resumeUrl && (
                 <a
@@ -263,8 +261,6 @@ function Hero() {
                   Download Resume
                 </a>
               )}
-
-              {/* Contact */}
 
               <a
                 href="#contact"
@@ -282,54 +278,81 @@ function Hero() {
               {/* GitHub */}
 
               {githubUrl && (
-                <a
+                <SocialLinkDark
                   href={githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GitHub"
-                  title="GitHub"
-                  className="rounded-xl border border-white/10 bg-white/5 p-3 text-gray-300 transition duration-300 hover:-translate-y-1 hover:border-purple-500 hover:text-purple-400"
+                  label="GitHub"
                 >
                   <GitHubIcon
                     size={21}
                   />
-                </a>
+                </SocialLinkDark>
               )}
 
               {/* LinkedIn */}
 
               {linkedinUrl && (
-                <a
+                <SocialLinkDark
                   href={linkedinUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn"
-                  title="LinkedIn"
-                  className="rounded-xl border border-white/10 bg-white/5 p-3 text-gray-300 transition duration-300 hover:-translate-y-1 hover:border-purple-500 hover:text-purple-400"
+                  label="LinkedIn"
                 >
                   <LinkedInIcon
                     size={21}
                   />
-                </a>
+                </SocialLinkDark>
               )}
 
               {/* Google Scholar */}
 
               {googleScholarUrl && (
-                <a
+                <SocialLinkDark
                   href={
                     googleScholarUrl
                   }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Google Scholar"
-                  title="Google Scholar"
-                  className="rounded-xl border border-white/10 bg-white/5 p-3 text-gray-300 transition duration-300 hover:-translate-y-1 hover:border-purple-500 hover:text-purple-400"
+                  label="Google Scholar"
                 >
                   <GoogleScholarIcon
                     size={21}
                   />
-                </a>
+                </SocialLinkDark>
+              )}
+
+              {/* Facebook */}
+
+              {facebookUrl && (
+                <SocialLinkDark
+                  href={facebookUrl}
+                  label="Facebook"
+                >
+                  <FacebookIcon
+                    size={21}
+                  />
+                </SocialLinkDark>
+              )}
+
+              {/* Instagram */}
+
+              {instagramUrl && (
+                <SocialLinkDark
+                  href={instagramUrl}
+                  label="Instagram"
+                >
+                  <InstagramIcon
+                    size={21}
+                  />
+                </SocialLinkDark>
+              )}
+
+              {/* Twitter / X */}
+
+              {twitterUrl && (
+                <SocialLinkDark
+                  href={twitterUrl}
+                  label="X / Twitter"
+                >
+                  <XIcon
+                    size={20}
+                  />
+                </SocialLinkDark>
               )}
 
               {/* Email */}
@@ -339,7 +362,7 @@ function Hero() {
                   href={`mailto:${email}`}
                   aria-label="Email"
                   title="Email"
-                  className="rounded-xl border border-white/10 bg-white/5 p-3 text-gray-300 transition duration-300 hover:-translate-y-1 hover:border-purple-500 hover:text-purple-400"
+                  className="flex h-[46px] w-[46px] items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-300 transition duration-300 hover:-translate-y-1 hover:border-purple-500 hover:text-purple-400"
                 >
                   <Mail
                     size={21}
@@ -351,24 +374,14 @@ function Hero() {
 
           {/* ================================= */}
           {/* PROFILE IMAGE */}
-          {/* MOBILE: FIRST */}
-          {/* DESKTOP: RIGHT */}
           {/* ================================= */}
 
           <div className="order-1 relative flex min-h-[360px] items-center justify-center sm:min-h-[500px] lg:order-2">
-            {/* Main glow */}
-
             <div className="absolute h-[280px] w-[280px] rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 opacity-20 blur-[70px] sm:h-[340px] sm:w-[340px]" />
-
-            {/* Outer ring */}
 
             <div className="absolute h-[320px] w-[320px] rounded-full border border-purple-500/20 sm:h-[410px] sm:w-[410px]" />
 
-            {/* Inner ring */}
-
             <div className="absolute h-[290px] w-[290px] rounded-full border border-fuchsia-500/20 sm:h-[370px] sm:w-[370px]" />
-
-            {/* Profile picture */}
 
             <div className="relative z-10 flex h-[240px] w-[240px] items-center justify-center overflow-hidden rounded-full border-2 border-purple-400/40 bg-[#10142b] shadow-[0_0_60px_rgba(168,85,247,0.2)] sm:h-[320px] sm:w-[320px]">
               {profileImageUrl ? (
@@ -392,8 +405,6 @@ function Hero() {
               )}
             </div>
 
-            {/* Decorative dots */}
-
             <div className="absolute right-[8%] top-[16%] h-3 w-3 rounded-full bg-purple-400 shadow-[0_0_20px_rgba(192,132,252,0.8)] sm:right-[10%] sm:top-[18%]" />
 
             <div className="absolute bottom-[18%] left-[8%] h-2 w-2 rounded-full bg-pink-400 shadow-[0_0_20px_rgba(244,114,182,0.8)] sm:bottom-[20%] sm:left-[12%]" />
@@ -405,7 +416,6 @@ function Hero() {
 
   /* ================================= */
   /* LIGHT THEME */
-  /* DESIGN #2 */
   /* ================================= */
 
   return (
@@ -413,9 +423,7 @@ function Hero() {
       id="home"
       className="relative flex min-h-screen items-center overflow-hidden bg-[#f8fafc] px-6 pb-20 pt-32 text-slate-900 transition-colors duration-300 lg:px-8"
     >
-      {/* ================================= */}
-      {/* LIGHT BACKGROUND DECORATION */}
-      {/* ================================= */}
+      {/* Background */}
 
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute right-[-160px] top-[-120px] h-[420px] w-[420px] rounded-full bg-violet-200/50 blur-[120px]" />
@@ -425,43 +433,29 @@ function Hero() {
         <div className="absolute left-1/2 top-[35%] h-[250px] w-[250px] rounded-full bg-fuchsia-100/50 blur-[100px]" />
       </div>
 
-      {/* ================================= */}
-      {/* CONTAINER */}
-      {/* ================================= */}
+      {/* Container */}
 
       <div className="relative mx-auto grid w-full max-w-7xl items-center gap-16 lg:grid-cols-[1.08fr_0.92fr] lg:gap-24">
-        {/* ================================= */}
-        {/* LEFT SIDE */}
-        {/* ================================= */}
+        {/* Left */}
 
         <div className="order-2 lg:order-1">
-          {/* Small intro */}
-
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-white px-4 py-2 text-sm font-medium text-violet-700 shadow-sm">
             <span className="h-2 w-2 rounded-full bg-violet-600" />
 
             Welcome to my portfolio
           </div>
 
-          {/* Intro */}
-
           <p className="mb-3 text-lg font-medium text-slate-500">
             Hello, I'm
           </p>
-
-          {/* Name */}
 
           <h1 className="mb-5 text-4xl font-bold leading-[1.05] tracking-tight text-slate-950 sm:text-6xl lg:text-6xl">
             {fullName}
           </h1>
 
-          {/* Headline */}
-
           <h2 className="mb-6 max-w-2xl text-2xl font-semibold leading-snug text-violet-700 sm:text-3xl">
             {headline}
           </h2>
-
-          {/* Bio */}
 
           <p className="mb-7 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
             {bio}
@@ -483,13 +477,9 @@ function Hero() {
             </div>
           )}
 
-          {/* ================================= */}
-          {/* BUTTONS */}
-          {/* ================================= */}
+          {/* Buttons */}
 
           <div className="mb-9 flex flex-wrap gap-3">
-            {/* Primary */}
-
             <a
               href="#projects"
               className="flex items-center gap-2 rounded-xl bg-slate-950 px-6 py-3.5 font-semibold text-white shadow-lg shadow-slate-900/10 transition duration-300 hover:-translate-y-0.5 hover:bg-violet-700"
@@ -500,8 +490,6 @@ function Hero() {
                 size={18}
               />
             </a>
-
-            {/* Resume */}
 
             {resumeUrl && (
               <a
@@ -517,8 +505,6 @@ function Hero() {
                 Download Resume
               </a>
             )}
-
-            {/* Contact */}
 
             <a
               href="#contact"
@@ -542,54 +528,81 @@ function Hero() {
             {/* GitHub */}
 
             {githubUrl && (
-              <a
+              <SocialLinkLight
                 href={githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="GitHub"
-                title="GitHub"
-                className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-violet-300 hover:text-violet-700"
+                label="GitHub"
               >
                 <GitHubIcon
                   size={20}
                 />
-              </a>
+              </SocialLinkLight>
             )}
 
             {/* LinkedIn */}
 
             {linkedinUrl && (
-              <a
+              <SocialLinkLight
                 href={linkedinUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                title="LinkedIn"
-                className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-violet-300 hover:text-violet-700"
+                label="LinkedIn"
               >
                 <LinkedInIcon
                   size={20}
                 />
-              </a>
+              </SocialLinkLight>
             )}
 
             {/* Google Scholar */}
 
             {googleScholarUrl && (
-              <a
+              <SocialLinkLight
                 href={
                   googleScholarUrl
                 }
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Google Scholar"
-                title="Google Scholar"
-                className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-violet-300 hover:text-violet-700"
+                label="Google Scholar"
               >
                 <GoogleScholarIcon
                   size={20}
                 />
-              </a>
+              </SocialLinkLight>
+            )}
+
+            {/* Facebook */}
+
+            {facebookUrl && (
+              <SocialLinkLight
+                href={facebookUrl}
+                label="Facebook"
+              >
+                <FacebookIcon
+                  size={20}
+                />
+              </SocialLinkLight>
+            )}
+
+            {/* Instagram */}
+
+            {instagramUrl && (
+              <SocialLinkLight
+                href={instagramUrl}
+                label="Instagram"
+              >
+                <InstagramIcon
+                  size={20}
+                />
+              </SocialLinkLight>
+            )}
+
+            {/* Twitter / X */}
+
+            {twitterUrl && (
+              <SocialLinkLight
+                href={twitterUrl}
+                label="X / Twitter"
+              >
+                <XIcon
+                  size={19}
+                />
+              </SocialLinkLight>
             )}
 
             {/* Email */}
@@ -611,16 +624,11 @@ function Hero() {
 
         {/* ================================= */}
         {/* RIGHT SIDE */}
-        {/* LIGHT DESIGN #2 PROFILE */}
         {/* ================================= */}
 
         <div className="order-1 flex justify-center lg:order-2 lg:justify-end">
           <div className="relative w-full max-w-[440px]">
-            {/* Decorative block */}
-
             <div className="absolute -right-5 -top-5 hidden h-28 w-28 rounded-3xl border border-violet-200 bg-violet-100/60 sm:block" />
-
-            {/* Small dot pattern */}
 
             <div className="absolute -bottom-7 -left-7 hidden grid-cols-5 gap-2 sm:grid">
               {Array.from({
@@ -635,11 +643,9 @@ function Hero() {
               )}
             </div>
 
-            {/* Main profile card */}
+            {/* Profile Card */}
 
             <div className="relative overflow-hidden rounded-[32px] border border-slate-200 bg-white p-3 shadow-[0_25px_70px_rgba(15,23,42,0.12)]">
-              {/* Image */}
-
               <div className="relative aspect-[4/5] overflow-hidden rounded-[26px] bg-gradient-to-br from-slate-100 via-violet-50 to-slate-100">
                 {profileImageUrl ? (
                   <img
@@ -663,15 +669,9 @@ function Hero() {
                   </div>
                 )}
 
-                {/* Bottom gradient */}
-
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-950/40 to-transparent" />
 
-                {/* ================================= */}
-                {/* AVAILABLE LABEL */}
-                {/* MOBILE / TABLET ONLY */}
-                {/* HIDDEN ON DESKTOP */}
-                {/* ================================= */}
+                {/* Availability */}
 
                 <div className="absolute bottom-5 left-5 right-5 lg:hidden">
                   <div className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/90 px-3 py-1.5 text-xs font-semibold text-slate-800 shadow-sm backdrop-blur">
@@ -683,7 +683,7 @@ function Hero() {
               </div>
             </div>
 
-            {/* Floating professional card */}
+            {/* Focus Card */}
 
             <div className="absolute -bottom-8 -left-5 hidden min-w-[210px] rounded-2xl border border-slate-200 bg-white p-4 shadow-xl shadow-slate-900/10 sm:block">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-violet-600">
@@ -702,6 +702,48 @@ function Hero() {
         </div>
       </div>
     </section>
+  );
+}
+
+/* ================================= */
+/* SOCIAL LINK COMPONENTS */
+/* ================================= */
+
+function SocialLinkDark({
+  href,
+  label,
+  children,
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      title={label}
+      className="flex h-[46px] w-[46px] items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-300 transition duration-300 hover:-translate-y-1 hover:border-purple-500 hover:text-purple-400"
+    >
+      {children}
+    </a>
+  );
+}
+
+function SocialLinkLight({
+  href,
+  label,
+  children,
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      title={label}
+      className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-violet-300 hover:text-violet-700"
+    >
+      {children}
+    </a>
   );
 }
 
@@ -764,6 +806,93 @@ function GoogleScholarIcon({
       aria-hidden="true"
     >
       <path d="M12 3 2 9l10 6 8-4.8V17h2V9L12 3Zm0 9.67L5.55 8.8 12 4.93l6.45 3.87L12 12.67ZM6 12.1V16c0 2.2 2.69 4 6 4s6-1.8 6-4v-3.9l-2 1.2V16c0 .84-1.58 2-4 2s-4-1.16-4-2v-2.7l-2-1.2Z" />
+    </svg>
+  );
+}
+
+/* ================================= */
+/* FACEBOOK SVG ICON */
+/* ================================= */
+
+function FacebookIcon({
+  size = 21,
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path d="M13.5 22v-8h2.7l.4-3.1h-3.1V8.9c0-.9.3-1.5 1.6-1.5h1.7V4.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.1H7.3V14h2.8v8h3.4Z" />
+    </svg>
+  );
+}
+
+/* ================================= */
+/* INSTAGRAM SVG ICON */
+/* ================================= */
+
+function InstagramIcon({
+  size = 21,
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <rect
+        x="3"
+        y="3"
+        width="18"
+        height="18"
+        rx="5"
+      />
+
+      <circle
+        cx="12"
+        cy="12"
+        r="4"
+      />
+
+      <circle
+        cx="17.5"
+        cy="6.5"
+        r="1"
+        fill="currentColor"
+        stroke="none"
+      />
+    </svg>
+  );
+}
+
+/* ================================= */
+/* X / TWITTER SVG ICON */
+/* ================================= */
+
+function XIcon({
+  size = 21,
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path d="M18.244 2H21.552L14.325 10.26L22.827 22H16.17L10.956 15.183L4.99 22H1.68L9.411 13.165L1.254 2H8.08L12.793 8.231L18.244 2ZM17.083 19.932H18.916L7.084 3.96H5.117L17.083 19.932Z" />
     </svg>
   );
 }

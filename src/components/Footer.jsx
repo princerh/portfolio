@@ -60,7 +60,7 @@ function Footer() {
       await supabase
         .from("profile")
         .select(
-          "full_name, email, github_url, linkedin_url, google_scholar_url"
+          "full_name, email, github_url, linkedin_url, google_scholar_url, facebook_url, instagram_url, twitter_url"
         )
         .limit(1)
         .maybeSingle();
@@ -87,7 +87,9 @@ function Footer() {
       <footer className="relative border-t border-white/10 bg-[#040611] px-6 py-12 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr]">
-            {/* Brand */}
+            {/* ================================= */}
+            {/* BRAND */}
+            {/* ================================= */}
 
             <div>
               <a
@@ -106,7 +108,9 @@ function Footer() {
               </p>
             </div>
 
-            {/* Navigation */}
+            {/* ================================= */}
+            {/* NAVIGATION */}
+            {/* ================================= */}
 
             <div>
               <h3 className="text-sm font-semibold uppercase tracking-[0.15em] text-gray-300">
@@ -132,90 +136,126 @@ function Footer() {
               </div>
             </div>
 
-            {/* Connect */}
+            {/* ================================= */}
+            {/* CONNECT */}
+            {/* ================================= */}
 
             <div>
               <h3 className="text-sm font-semibold uppercase tracking-[0.15em] text-gray-300">
                 Connect
               </h3>
 
-              <div className="mt-5 space-y-3">
+              <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
                 {/* Email */}
 
                 {profile?.email && (
-                  <a
+                  <DarkSocialLink
                     href={`mailto:${profile.email}`}
-                    className="flex items-center gap-2 text-sm text-gray-500 transition hover:text-purple-400"
+                    label="Email"
+                    external={false}
                   >
                     <Mail
                       size={16}
                     />
-
-                    Email
-                  </a>
+                  </DarkSocialLink>
                 )}
 
                 {/* GitHub */}
 
                 {profile?.github_url && (
-                  <a
+                  <DarkSocialLink
                     href={
                       profile.github_url
                     }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-gray-500 transition hover:text-purple-400"
+                    label="GitHub"
                   >
                     <GitHubIcon
                       size={16}
                     />
-
-                    GitHub
-                  </a>
+                  </DarkSocialLink>
                 )}
 
                 {/* LinkedIn */}
 
                 {profile?.linkedin_url && (
-                  <a
+                  <DarkSocialLink
                     href={
                       profile.linkedin_url
                     }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-gray-500 transition hover:text-purple-400"
+                    label="LinkedIn"
                   >
                     <LinkedInIcon
                       size={16}
                     />
-
-                    LinkedIn
-                  </a>
+                  </DarkSocialLink>
                 )}
 
                 {/* Google Scholar */}
 
                 {profile?.google_scholar_url && (
-                  <a
+                  <DarkSocialLink
                     href={
                       profile.google_scholar_url
                     }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-gray-500 transition hover:text-purple-400"
+                    label="Google Scholar"
                   >
                     <GoogleScholarIcon
                       size={16}
                     />
+                  </DarkSocialLink>
+                )}
 
-                    Google Scholar
-                  </a>
+                {/* Facebook */}
+
+                {profile?.facebook_url && (
+                  <DarkSocialLink
+                    href={
+                      profile.facebook_url
+                    }
+                    label="Facebook"
+                  >
+                    <FacebookIcon
+                      size={16}
+                    />
+                  </DarkSocialLink>
+                )}
+
+                {/* Instagram */}
+
+                {profile?.instagram_url && (
+                  <DarkSocialLink
+                    href={
+                      profile.instagram_url
+                    }
+                    label="Instagram"
+                  >
+                    <InstagramIcon
+                      size={16}
+                    />
+                  </DarkSocialLink>
+                )}
+
+                {/* X / Twitter */}
+
+                {profile?.twitter_url && (
+                  <DarkSocialLink
+                    href={
+                      profile.twitter_url
+                    }
+                    label="X / Twitter"
+                  >
+                    <XIcon
+                      size={16}
+                    />
+                  </DarkSocialLink>
                 )}
               </div>
             </div>
           </div>
 
-          {/* Bottom */}
+          {/* ================================= */}
+          {/* BOTTOM */}
+          {/* ================================= */}
 
           <div className="mt-10 flex flex-col gap-5 border-t border-white/10 pt-7 text-sm text-gray-600 sm:flex-row sm:items-center sm:justify-between">
             <p>
@@ -244,12 +284,13 @@ function Footer() {
 
   /* ================================= */
   /* LIGHT THEME */
-  /* DESIGN #2 */
   /* ================================= */
 
   return (
     <footer className="relative overflow-hidden border-t border-slate-200 bg-white px-6 py-14 text-slate-900 lg:px-8">
-      {/* Background decoration */}
+      {/* ================================= */}
+      {/* BACKGROUND DECORATION */}
+      {/* ================================= */}
 
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -bottom-36 -left-28 h-[320px] w-[320px] rounded-full bg-violet-100/60 blur-[110px]" />
@@ -262,7 +303,7 @@ function Footer() {
         {/* MAIN FOOTER */}
         {/* ================================= */}
 
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.15fr]">
           {/* ================================= */}
           {/* BRAND */}
           {/* ================================= */}
@@ -273,6 +314,7 @@ function Footer() {
               className="inline-flex items-center text-2xl font-bold tracking-tight text-slate-950"
             >
               Prince
+
               <span className="text-violet-700">
                 .
               </span>
@@ -335,85 +377,109 @@ function Footer() {
               Connect
             </h3>
 
-            <div className="mt-5 space-y-3">
+            <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
               {/* Email */}
 
               {profile?.email && (
-                <a
+                <LightSocialLink
                   href={`mailto:${profile.email}`}
-                  className="group flex items-center gap-3 text-sm font-medium text-slate-500 transition hover:text-violet-700"
+                  label="Email"
+                  external={false}
                 >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition group-hover:border-violet-200 group-hover:bg-violet-50 group-hover:text-violet-700">
-                    <Mail
-                      size={16}
-                    />
-                  </div>
-
-                  Email
-                </a>
+                  <Mail
+                    size={16}
+                  />
+                </LightSocialLink>
               )}
 
               {/* GitHub */}
 
               {profile?.github_url && (
-                <a
+                <LightSocialLink
                   href={
                     profile.github_url
                   }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center gap-3 text-sm font-medium text-slate-500 transition hover:text-violet-700"
+                  label="GitHub"
                 >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition group-hover:border-violet-200 group-hover:bg-violet-50 group-hover:text-violet-700">
-                    <GitHubIcon
-                      size={16}
-                    />
-                  </div>
-
-                  GitHub
-                </a>
+                  <GitHubIcon
+                    size={16}
+                  />
+                </LightSocialLink>
               )}
 
               {/* LinkedIn */}
 
               {profile?.linkedin_url && (
-                <a
+                <LightSocialLink
                   href={
                     profile.linkedin_url
                   }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center gap-3 text-sm font-medium text-slate-500 transition hover:text-violet-700"
+                  label="LinkedIn"
                 >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition group-hover:border-violet-200 group-hover:bg-violet-50 group-hover:text-violet-700">
-                    <LinkedInIcon
-                      size={16}
-                    />
-                  </div>
-
-                  LinkedIn
-                </a>
+                  <LinkedInIcon
+                    size={16}
+                  />
+                </LightSocialLink>
               )}
 
               {/* Google Scholar */}
 
               {profile?.google_scholar_url && (
-                <a
+                <LightSocialLink
                   href={
                     profile.google_scholar_url
                   }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center gap-3 text-sm font-medium text-slate-500 transition hover:text-violet-700"
+                  label="Google Scholar"
                 >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition group-hover:border-violet-200 group-hover:bg-violet-50 group-hover:text-violet-700">
-                    <GoogleScholarIcon
-                      size={16}
-                    />
-                  </div>
+                  <GoogleScholarIcon
+                    size={16}
+                  />
+                </LightSocialLink>
+              )}
 
-                  Google Scholar
-                </a>
+              {/* Facebook */}
+
+              {profile?.facebook_url && (
+                <LightSocialLink
+                  href={
+                    profile.facebook_url
+                  }
+                  label="Facebook"
+                >
+                  <FacebookIcon
+                    size={16}
+                  />
+                </LightSocialLink>
+              )}
+
+              {/* Instagram */}
+
+              {profile?.instagram_url && (
+                <LightSocialLink
+                  href={
+                    profile.instagram_url
+                  }
+                  label="Instagram"
+                >
+                  <InstagramIcon
+                    size={16}
+                  />
+                </LightSocialLink>
+              )}
+
+              {/* X / Twitter */}
+
+              {profile?.twitter_url && (
+                <LightSocialLink
+                  href={
+                    profile.twitter_url
+                  }
+                  label="X / Twitter"
+                >
+                  <XIcon
+                    size={16}
+                  />
+                </LightSocialLink>
               )}
             </div>
           </div>
@@ -446,6 +512,80 @@ function Footer() {
         </div>
       </div>
     </footer>
+  );
+}
+
+/* ================================= */
+/* DARK SOCIAL LINK */
+/* ================================= */
+
+function DarkSocialLink({
+  href,
+  label,
+  children,
+  external = true,
+}) {
+  return (
+    <a
+      href={href}
+      target={
+        external
+          ? "_blank"
+          : undefined
+      }
+      rel={
+        external
+          ? "noopener noreferrer"
+          : undefined
+      }
+      aria-label={label}
+      title={label}
+      className="flex items-center gap-2 text-sm text-gray-500 transition hover:text-purple-400"
+    >
+      {children}
+
+      <span>
+        {label}
+      </span>
+    </a>
+  );
+}
+
+/* ================================= */
+/* LIGHT SOCIAL LINK */
+/* ================================= */
+
+function LightSocialLink({
+  href,
+  label,
+  children,
+  external = true,
+}) {
+  return (
+    <a
+      href={href}
+      target={
+        external
+          ? "_blank"
+          : undefined
+      }
+      rel={
+        external
+          ? "noopener noreferrer"
+          : undefined
+      }
+      aria-label={label}
+      title={label}
+      className="group flex items-center gap-3 text-sm font-medium text-slate-500 transition hover:text-violet-700"
+    >
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition group-hover:border-violet-200 group-hover:bg-violet-50 group-hover:text-violet-700">
+        {children}
+      </div>
+
+      <span>
+        {label}
+      </span>
+    </a>
   );
 }
 
@@ -508,6 +648,93 @@ function GoogleScholarIcon({
       aria-hidden="true"
     >
       <path d="M12 3 2 9l10 6 8-4.8V17h2V9L12 3Zm0 9.67L5.55 8.8 12 4.93l6.45 3.87L12 12.67ZM6 12.1V16c0 2.2 2.69 4 6 4s6-1.8 6-4v-3.9l-2 1.2V16c0 .84-1.58 2-4 2s-4-1.16-4-2v-2.7l-2-1.2Z" />
+    </svg>
+  );
+}
+
+/* ================================= */
+/* FACEBOOK SVG */
+/* ================================= */
+
+function FacebookIcon({
+  size = 18,
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path d="M13.5 22v-8h2.7l.4-3.1h-3.1V8.9c0-.9.3-1.5 1.6-1.5h1.7V4.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.1H7.3V14h2.8v8h3.4Z" />
+    </svg>
+  );
+}
+
+/* ================================= */
+/* INSTAGRAM SVG */
+/* ================================= */
+
+function InstagramIcon({
+  size = 18,
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <rect
+        x="3"
+        y="3"
+        width="18"
+        height="18"
+        rx="5"
+      />
+
+      <circle
+        cx="12"
+        cy="12"
+        r="4"
+      />
+
+      <circle
+        cx="17.5"
+        cy="6.5"
+        r="1"
+        fill="currentColor"
+        stroke="none"
+      />
+    </svg>
+  );
+}
+
+/* ================================= */
+/* X / TWITTER SVG */
+/* ================================= */
+
+function XIcon({
+  size = 18,
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path d="M18.244 2H21.552L14.325 10.26L22.827 22H16.17L10.956 15.183L4.99 22H1.68L9.411 13.165L1.254 2H8.08L12.793 8.231L18.244 2ZM17.083 19.932H18.916L7.084 3.96H5.117L17.083 19.932Z" />
     </svg>
   );
 }

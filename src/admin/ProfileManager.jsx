@@ -59,6 +59,21 @@ function ProfileManager() {
   ] = useState("");
 
   const [
+    facebookUrl,
+    setFacebookUrl,
+  ] = useState("");
+
+  const [
+    instagramUrl,
+    setInstagramUrl,
+  ] = useState("");
+
+  const [
+    twitterUrl,
+    setTwitterUrl,
+  ] = useState("");
+
+  const [
     profileImageUrl,
     setProfileImageUrl,
   ] = useState("");
@@ -152,6 +167,18 @@ function ProfileManager() {
             ""
         );
 
+        setFacebookUrl(
+          data.facebook_url ?? ""
+        );
+
+        setInstagramUrl(
+          data.instagram_url ?? ""
+        );
+
+        setTwitterUrl(
+          data.twitter_url ?? ""
+        );
+
         setProfileImageUrl(
           data.profile_image_url ??
             ""
@@ -209,6 +236,15 @@ function ProfileManager() {
 
       google_scholar_url:
         googleScholarUrl.trim(),
+
+      facebook_url:
+        facebookUrl.trim(),
+
+      instagram_url:
+        instagramUrl.trim(),
+
+      twitter_url:
+        twitterUrl.trim(),
 
       profile_image_url:
         profileImageUrl,
@@ -715,19 +751,73 @@ function ProfileManager() {
                 />
               }
             />
+
+            {/* Facebook */}
+
+            <InputField
+              label="Facebook URL"
+              type="url"
+              value={
+                facebookUrl
+              }
+              onChange={
+                setFacebookUrl
+              }
+              placeholder="https://www.facebook.com/username"
+              customIcon={
+                <FacebookIcon
+                  size={18}
+                />
+              }
+            />
+
+            {/* Instagram */}
+
+            <InputField
+              label="Instagram URL"
+              type="url"
+              value={
+                instagramUrl
+              }
+              onChange={
+                setInstagramUrl
+              }
+              placeholder="https://www.instagram.com/username"
+              customIcon={
+                <InstagramIcon
+                  size={18}
+                />
+              }
+            />
+
+            {/* Twitter / X */}
+
+            <InputField
+              label="Twitter / X URL"
+              type="url"
+              value={
+                twitterUrl
+              }
+              onChange={
+                setTwitterUrl
+              }
+              placeholder="https://x.com/username"
+              customIcon={
+                <XIcon
+                  size={18}
+                />
+              }
+            />
           </div>
 
-          {/* Scholar help */}
+          {/* Social links help */}
 
           <div className="mt-4 rounded-2xl border border-purple-500/10 bg-purple-500/5 px-4 py-3">
             <p className="text-xs leading-5 text-gray-500">
-              Add your public Google
-              Scholar profile URL.
-              It will be used in the
-              public portfolio for
-              visitors to access your
-              research profile and
-              publications.
+              Add only your public profile URLs.
+              These links can be displayed on your
+              public portfolio so visitors can access
+              your research and social profiles.
             </p>
           </div>
 
