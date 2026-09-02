@@ -33,7 +33,7 @@ const navigation = [
     href: "#experience",
   },
   {
-    name: "Documents",
+    name: "Research",
     href: "#documents",
   },
   {
@@ -60,7 +60,7 @@ function Footer() {
       await supabase
         .from("profile")
         .select(
-          "full_name, email, github_url, linkedin_url"
+          "full_name, email, github_url, linkedin_url, google_scholar_url"
         )
         .limit(1)
         .maybeSingle();
@@ -85,15 +85,11 @@ function Footer() {
   if (isDark) {
     return (
       <footer className="relative border-t border-white/10 bg-[#040611] px-6 py-12 lg:px-8">
-
         <div className="mx-auto max-w-7xl">
-
           <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr]">
-
             {/* Brand */}
 
             <div>
-
               <a
                 href="#home"
                 className="gradient-text text-2xl font-bold"
@@ -103,23 +99,21 @@ function Footer() {
 
               <p className="mt-4 max-w-sm text-sm leading-7 text-gray-500">
                 Software engineering,
-                artificial intelligence
-                and research focused
+                artificial intelligence,
+                machine learning and
+                research focused
                 portfolio.
               </p>
-
             </div>
 
             {/* Navigation */}
 
             <div>
-
               <h3 className="text-sm font-semibold uppercase tracking-[0.15em] text-gray-300">
                 Navigation
               </h3>
 
               <div className="mt-5 grid grid-cols-2 gap-x-5 gap-y-3">
-
                 {navigation.map(
                   (item) => (
                     <a
@@ -135,20 +129,18 @@ function Footer() {
                     </a>
                   )
                 )}
-
               </div>
-
             </div>
 
             {/* Connect */}
 
             <div>
-
               <h3 className="text-sm font-semibold uppercase tracking-[0.15em] text-gray-300">
                 Connect
               </h3>
 
               <div className="mt-5 space-y-3">
+                {/* Email */}
 
                 {profile?.email && (
                   <a
@@ -163,6 +155,8 @@ function Footer() {
                   </a>
                 )}
 
+                {/* GitHub */}
+
                 {profile?.github_url && (
                   <a
                     href={
@@ -170,11 +164,17 @@ function Footer() {
                     }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block text-sm text-gray-500 transition hover:text-purple-400"
+                    className="flex items-center gap-2 text-sm text-gray-500 transition hover:text-purple-400"
                   >
+                    <GitHubIcon
+                      size={16}
+                    />
+
                     GitHub
                   </a>
                 )}
+
+                {/* LinkedIn */}
 
                 {profile?.linkedin_url && (
                   <a
@@ -183,22 +183,41 @@ function Footer() {
                     }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block text-sm text-gray-500 transition hover:text-purple-400"
+                    className="flex items-center gap-2 text-sm text-gray-500 transition hover:text-purple-400"
                   >
+                    <LinkedInIcon
+                      size={16}
+                    />
+
                     LinkedIn
                   </a>
                 )}
 
+                {/* Google Scholar */}
+
+                {profile?.google_scholar_url && (
+                  <a
+                    href={
+                      profile.google_scholar_url
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm text-gray-500 transition hover:text-purple-400"
+                  >
+                    <GoogleScholarIcon
+                      size={16}
+                    />
+
+                    Google Scholar
+                  </a>
+                )}
               </div>
-
             </div>
-
           </div>
 
           {/* Bottom */}
 
           <div className="mt-10 flex flex-col gap-5 border-t border-white/10 pt-7 text-sm text-gray-600 sm:flex-row sm:items-center sm:justify-between">
-
             <p>
               © {year}{" "}
               {profile?.full_name ||
@@ -217,11 +236,8 @@ function Footer() {
                 size={16}
               />
             </a>
-
           </div>
-
         </div>
-
       </footer>
     );
   }
@@ -233,31 +249,25 @@ function Footer() {
 
   return (
     <footer className="relative overflow-hidden border-t border-slate-200 bg-white px-6 py-14 text-slate-900 lg:px-8">
-
       {/* Background decoration */}
 
       <div className="pointer-events-none absolute inset-0">
-
         <div className="absolute -bottom-36 -left-28 h-[320px] w-[320px] rounded-full bg-violet-100/60 blur-[110px]" />
 
         <div className="absolute -right-28 top-0 h-[280px] w-[280px] rounded-full bg-blue-100/60 blur-[110px]" />
-
       </div>
 
       <div className="relative mx-auto max-w-7xl">
-
         {/* ================================= */}
         {/* MAIN FOOTER */}
         {/* ================================= */}
 
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
-
           {/* ================================= */}
           {/* BRAND */}
           {/* ================================= */}
 
           <div>
-
             <a
               href="#home"
               className="inline-flex items-center text-2xl font-bold tracking-tight text-slate-950"
@@ -277,16 +287,13 @@ function Footer() {
             </p>
 
             <div className="mt-6 flex items-center gap-2">
-
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
 
               <p className="text-xs font-medium text-slate-500">
                 Open to relevant opportunities
                 and collaborations
               </p>
-
             </div>
-
           </div>
 
           {/* ================================= */}
@@ -294,13 +301,11 @@ function Footer() {
           {/* ================================= */}
 
           <div>
-
             <h3 className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
               Navigation
             </h3>
 
             <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-3">
-
               {navigation.map(
                 (item) => (
                   <a
@@ -312,17 +317,13 @@ function Footer() {
                     }
                     className="group flex items-center gap-2 text-sm font-medium text-slate-500 transition duration-300 hover:text-violet-700"
                   >
-
                     <span className="h-1 w-1 rounded-full bg-slate-300 transition group-hover:bg-violet-600" />
 
                     {item.name}
-
                   </a>
                 )
               )}
-
             </div>
-
           </div>
 
           {/* ================================= */}
@@ -330,31 +331,29 @@ function Footer() {
           {/* ================================= */}
 
           <div>
-
             <h3 className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
               Connect
             </h3>
 
             <div className="mt-5 space-y-3">
+              {/* Email */}
 
               {profile?.email && (
                 <a
                   href={`mailto:${profile.email}`}
                   className="group flex items-center gap-3 text-sm font-medium text-slate-500 transition hover:text-violet-700"
                 >
-
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition group-hover:border-violet-200 group-hover:bg-violet-50 group-hover:text-violet-700">
-
                     <Mail
                       size={16}
                     />
-
                   </div>
 
                   Email
-
                 </a>
               )}
+
+              {/* GitHub */}
 
               {profile?.github_url && (
                 <a
@@ -365,19 +364,17 @@ function Footer() {
                   rel="noopener noreferrer"
                   className="group flex items-center gap-3 text-sm font-medium text-slate-500 transition hover:text-violet-700"
                 >
-
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition group-hover:border-violet-200 group-hover:bg-violet-50 group-hover:text-violet-700">
-
                     <GitHubIcon
                       size={16}
                     />
-
                   </div>
 
                   GitHub
-
                 </a>
               )}
+
+              {/* LinkedIn */}
 
               {profile?.linkedin_url && (
                 <a
@@ -388,24 +385,38 @@ function Footer() {
                   rel="noopener noreferrer"
                   className="group flex items-center gap-3 text-sm font-medium text-slate-500 transition hover:text-violet-700"
                 >
-
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition group-hover:border-violet-200 group-hover:bg-violet-50 group-hover:text-violet-700">
-
                     <LinkedInIcon
                       size={16}
                     />
-
                   </div>
 
                   LinkedIn
-
                 </a>
               )}
 
+              {/* Google Scholar */}
+
+              {profile?.google_scholar_url && (
+                <a
+                  href={
+                    profile.google_scholar_url
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-3 text-sm font-medium text-slate-500 transition hover:text-violet-700"
+                >
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 transition group-hover:border-violet-200 group-hover:bg-violet-50 group-hover:text-violet-700">
+                    <GoogleScholarIcon
+                      size={16}
+                    />
+                  </div>
+
+                  Google Scholar
+                </a>
+              )}
             </div>
-
           </div>
-
         </div>
 
         {/* ================================= */}
@@ -413,7 +424,6 @@ function Footer() {
         {/* ================================= */}
 
         <div className="mt-12 flex flex-col gap-5 border-t border-slate-200 pt-7 sm:flex-row sm:items-center sm:justify-between">
-
           <p className="text-sm text-slate-400">
             © {year}{" "}
             {profile?.full_name ||
@@ -433,15 +443,11 @@ function Footer() {
               className="transition duration-300 group-hover:-translate-y-0.5"
             />
           </a>
-
         </div>
-
       </div>
-
     </footer>
   );
 }
-
 
 /* ================================= */
 /* GITHUB SVG */
@@ -464,7 +470,6 @@ function GitHubIcon({
   );
 }
 
-
 /* ================================= */
 /* LINKEDIN SVG */
 /* ================================= */
@@ -482,6 +487,27 @@ function LinkedInIcon({
       aria-hidden="true"
     >
       <path d="M6.94 8.5H3.56V19H6.94V8.5ZM5.25 3C4.17 3 3.3 3.87 3.3 4.95C3.3 6.03 4.17 6.9 5.25 6.9C6.33 6.9 7.2 6.03 7.2 4.95C7.2 3.87 6.33 3 5.25 3ZM20.7 12.98C20.7 9.82 19.01 8.35 16.76 8.35C14.95 8.35 14.14 9.35 13.69 10.05V8.5H10.31V19H13.69V13.8C13.69 12.43 13.95 11.1 15.65 11.1C17.33 11.1 17.35 12.67 17.35 13.89V19H20.73L20.7 12.98Z" />
+    </svg>
+  );
+}
+
+/* ================================= */
+/* GOOGLE SCHOLAR SVG */
+/* ================================= */
+
+function GoogleScholarIcon({
+  size = 18,
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path d="M12 3 2 9l10 6 8-4.8V17h2V9L12 3Zm0 9.67L5.55 8.8 12 4.93l6.45 3.87L12 12.67ZM6 12.1V16c0 2.2 2.69 4 6 4s6-1.8 6-4v-3.9l-2 1.2V16c0 .84-1.58 2-4 2s-4-1.16-4-2v-2.7l-2-1.2Z" />
     </svg>
   );
 }
