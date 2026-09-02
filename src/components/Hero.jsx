@@ -106,7 +106,6 @@ function Hero() {
         }`}
       >
         <div className="text-center">
-
           <span
             className={`loading loading-spinner loading-lg ${
               isDark
@@ -124,7 +123,6 @@ function Hero() {
           >
             Loading portfolio...
           </p>
-
         </div>
       </section>
     );
@@ -140,7 +138,7 @@ function Hero() {
 
   const headline =
     profile?.headline ||
-    "Software Engineer & AI/ML Enthusiast";
+    "AI Engineer / ML Engineer";
 
   const bio =
     profile?.bio ||
@@ -158,8 +156,13 @@ function Hero() {
   const linkedinUrl =
     profile?.linkedin_url || "";
 
+  const googleScholarUrl =
+    profile?.google_scholar_url ||
+    "";
+
   const profileImageUrl =
-    profile?.profile_image_url || "";
+    profile?.profile_image_url ||
+    "";
 
   const resumeUrl =
     resume?.file_url || "";
@@ -174,7 +177,6 @@ function Hero() {
         id="home"
         className="relative flex min-h-screen items-center overflow-hidden px-6 pb-20 pt-28 lg:px-8"
       >
-
         {/* ================================= */}
         {/* BACKGROUND EFFECTS */}
         {/* ================================= */}
@@ -190,7 +192,6 @@ function Hero() {
         {/* ================================= */}
 
         <div className="relative mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-2 lg:gap-20">
-
           {/* ================================= */}
           {/* INTRODUCTION */}
           {/* MOBILE: SECOND */}
@@ -198,7 +199,6 @@ function Hero() {
           {/* ================================= */}
 
           <div className="order-2 lg:order-1">
-
             <p className="mb-3 text-lg text-gray-300">
               Hi, I'm
             </p>
@@ -219,7 +219,6 @@ function Hero() {
 
             {location && (
               <div className="mb-8 flex items-center gap-2 text-sm text-gray-500">
-
                 <MapPin
                   size={17}
                 />
@@ -227,7 +226,6 @@ function Hero() {
                 <span>
                   {location}
                 </span>
-
               </div>
             )}
 
@@ -236,7 +234,6 @@ function Hero() {
             {/* ================================= */}
 
             <div className="mb-9 flex flex-wrap gap-4">
-
               {/* View Projects */}
 
               <a
@@ -275,14 +272,14 @@ function Hero() {
               >
                 Contact Me
               </a>
-
             </div>
 
             {/* ================================= */}
             {/* SOCIAL LINKS */}
             {/* ================================= */}
 
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-4">
+              {/* GitHub */}
 
               {githubUrl && (
                 <a
@@ -299,6 +296,8 @@ function Hero() {
                 </a>
               )}
 
+              {/* LinkedIn */}
+
               {linkedinUrl && (
                 <a
                   href={linkedinUrl}
@@ -314,6 +313,27 @@ function Hero() {
                 </a>
               )}
 
+              {/* Google Scholar */}
+
+              {googleScholarUrl && (
+                <a
+                  href={
+                    googleScholarUrl
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Google Scholar"
+                  title="Google Scholar"
+                  className="rounded-xl border border-white/10 bg-white/5 p-3 text-gray-300 transition duration-300 hover:-translate-y-1 hover:border-purple-500 hover:text-purple-400"
+                >
+                  <GoogleScholarIcon
+                    size={21}
+                  />
+                </a>
+              )}
+
+              {/* Email */}
+
               {email && (
                 <a
                   href={`mailto:${email}`}
@@ -326,9 +346,7 @@ function Hero() {
                   />
                 </a>
               )}
-
             </div>
-
           </div>
 
           {/* ================================= */}
@@ -338,7 +356,6 @@ function Hero() {
           {/* ================================= */}
 
           <div className="order-1 relative flex min-h-[360px] items-center justify-center sm:min-h-[500px] lg:order-2">
-
             {/* Main glow */}
 
             <div className="absolute h-[280px] w-[280px] rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 opacity-20 blur-[70px] sm:h-[340px] sm:w-[340px]" />
@@ -354,16 +371,16 @@ function Hero() {
             {/* Profile picture */}
 
             <div className="relative z-10 flex h-[240px] w-[240px] items-center justify-center overflow-hidden rounded-full border-2 border-purple-400/40 bg-[#10142b] shadow-[0_0_60px_rgba(168,85,247,0.2)] sm:h-[320px] sm:w-[320px]">
-
               {profileImageUrl ? (
                 <img
-                  src={profileImageUrl}
+                  src={
+                    profileImageUrl
+                  }
                   alt={fullName}
                   className="h-full w-full object-cover"
                 />
               ) : (
                 <div className="flex flex-col items-center gap-3 text-gray-600">
-
                   <UserRound
                     size={90}
                   />
@@ -371,10 +388,8 @@ function Hero() {
                   <p className="text-sm">
                     Upload photo from Admin
                   </p>
-
                 </div>
               )}
-
             </div>
 
             {/* Decorative dots */}
@@ -382,11 +397,8 @@ function Hero() {
             <div className="absolute right-[8%] top-[16%] h-3 w-3 rounded-full bg-purple-400 shadow-[0_0_20px_rgba(192,132,252,0.8)] sm:right-[10%] sm:top-[18%]" />
 
             <div className="absolute bottom-[18%] left-[8%] h-2 w-2 rounded-full bg-pink-400 shadow-[0_0_20px_rgba(244,114,182,0.8)] sm:bottom-[20%] sm:left-[12%]" />
-
           </div>
-
         </div>
-
       </section>
     );
   }
@@ -401,19 +413,16 @@ function Hero() {
       id="home"
       className="relative flex min-h-screen items-center overflow-hidden bg-[#f8fafc] px-6 pb-20 pt-32 text-slate-900 transition-colors duration-300 lg:px-8"
     >
-
       {/* ================================= */}
       {/* LIGHT BACKGROUND DECORATION */}
       {/* ================================= */}
 
       <div className="pointer-events-none absolute inset-0">
-
         <div className="absolute right-[-160px] top-[-120px] h-[420px] w-[420px] rounded-full bg-violet-200/50 blur-[120px]" />
 
         <div className="absolute bottom-[-200px] left-[-100px] h-[380px] w-[380px] rounded-full bg-blue-100/70 blur-[120px]" />
 
         <div className="absolute left-1/2 top-[35%] h-[250px] w-[250px] rounded-full bg-fuchsia-100/50 blur-[100px]" />
-
       </div>
 
       {/* ================================= */}
@@ -421,21 +430,17 @@ function Hero() {
       {/* ================================= */}
 
       <div className="relative mx-auto grid w-full max-w-7xl items-center gap-16 lg:grid-cols-[1.08fr_0.92fr] lg:gap-24">
-
         {/* ================================= */}
         {/* LEFT SIDE */}
         {/* ================================= */}
 
         <div className="order-2 lg:order-1">
-
           {/* Small intro */}
 
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-white px-4 py-2 text-sm font-medium text-violet-700 shadow-sm">
-
             <span className="h-2 w-2 rounded-full bg-violet-600" />
 
             Welcome to my portfolio
-
           </div>
 
           {/* Intro */}
@@ -447,44 +452,34 @@ function Hero() {
           {/* Name */}
 
           <h1 className="mb-5 text-4xl font-bold leading-[1.05] tracking-tight text-slate-950 sm:text-6xl lg:text-6xl">
-
             {fullName}
-
           </h1>
 
           {/* Headline */}
 
           <h2 className="mb-6 max-w-2xl text-2xl font-semibold leading-snug text-violet-700 sm:text-3xl">
-
             {headline}
-
           </h2>
 
           {/* Bio */}
 
           <p className="mb-7 max-w-2xl text-base leading-8 text-slate-600 sm:text-lg">
-
             {bio}
-
           </p>
 
           {/* Location */}
 
           {location && (
             <div className="mb-8 flex items-center gap-2 text-sm font-medium text-slate-500">
-
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 text-violet-600">
-
                 <MapPin
                   size={16}
                 />
-
               </div>
 
               <span>
                 {location}
               </span>
-
             </div>
           )}
 
@@ -493,7 +488,6 @@ function Hero() {
           {/* ================================= */}
 
           <div className="mb-9 flex flex-wrap gap-3">
-
             {/* Primary */}
 
             <a
@@ -532,7 +526,6 @@ function Hero() {
             >
               Contact Me
             </a>
-
           </div>
 
           {/* ================================= */}
@@ -540,12 +533,13 @@ function Hero() {
           {/* ================================= */}
 
           <div className="flex flex-wrap items-center gap-4">
-
             <span className="text-sm font-medium text-slate-400">
               Connect
             </span>
 
             <div className="h-px w-8 bg-slate-300" />
+
+            {/* GitHub */}
 
             {githubUrl && (
               <a
@@ -562,6 +556,8 @@ function Hero() {
               </a>
             )}
 
+            {/* LinkedIn */}
+
             {linkedinUrl && (
               <a
                 href={linkedinUrl}
@@ -577,6 +573,27 @@ function Hero() {
               </a>
             )}
 
+            {/* Google Scholar */}
+
+            {googleScholarUrl && (
+              <a
+                href={
+                  googleScholarUrl
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Google Scholar"
+                title="Google Scholar"
+                className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-violet-300 hover:text-violet-700"
+              >
+                <GoogleScholarIcon
+                  size={20}
+                />
+              </a>
+            )}
+
+            {/* Email */}
+
             {email && (
               <a
                 href={`mailto:${email}`}
@@ -589,9 +606,7 @@ function Hero() {
                 />
               </a>
             )}
-
           </div>
-
         </div>
 
         {/* ================================= */}
@@ -600,9 +615,7 @@ function Hero() {
         {/* ================================= */}
 
         <div className="order-1 flex justify-center lg:order-2 lg:justify-end">
-
           <div className="relative w-full max-w-[440px]">
-
             {/* Decorative block */}
 
             <div className="absolute -right-5 -top-5 hidden h-28 w-28 rounded-3xl border border-violet-200 bg-violet-100/60 sm:block" />
@@ -610,47 +623,43 @@ function Hero() {
             {/* Small dot pattern */}
 
             <div className="absolute -bottom-7 -left-7 hidden grid-cols-5 gap-2 sm:grid">
-
               {Array.from({
                 length: 25,
-              }).map((_, index) => (
-                <span
-                  key={index}
-                  className="h-1.5 w-1.5 rounded-full bg-violet-300"
-                />
-              ))}
-
+              }).map(
+                (_, index) => (
+                  <span
+                    key={index}
+                    className="h-1.5 w-1.5 rounded-full bg-violet-300"
+                  />
+                )
+              )}
             </div>
 
             {/* Main profile card */}
 
             <div className="relative overflow-hidden rounded-[32px] border border-slate-200 bg-white p-3 shadow-[0_25px_70px_rgba(15,23,42,0.12)]">
-
               {/* Image */}
 
               <div className="relative aspect-[4/5] overflow-hidden rounded-[26px] bg-gradient-to-br from-slate-100 via-violet-50 to-slate-100">
-
                 {profileImageUrl ? (
                   <img
-                    src={profileImageUrl}
+                    src={
+                      profileImageUrl
+                    }
                     alt={fullName}
                     className="h-full w-full object-cover"
                   />
                 ) : (
                   <div className="flex h-full flex-col items-center justify-center gap-4 text-slate-400">
-
                     <div className="flex h-28 w-28 items-center justify-center rounded-full bg-white shadow-sm">
-
                       <UserRound
                         size={70}
                       />
-
                     </div>
 
                     <p className="text-sm">
                       Upload photo from Admin
                     </p>
-
                   </div>
                 )}
 
@@ -665,25 +674,18 @@ function Hero() {
                 {/* ================================= */}
 
                 <div className="absolute bottom-5 left-5 right-5 lg:hidden">
-
                   <div className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/90 px-3 py-1.5 text-xs font-semibold text-slate-800 shadow-sm backdrop-blur">
-
                     <span className="h-2 w-2 rounded-full bg-emerald-500" />
 
                     Available for opportunities
-
                   </div>
-
                 </div>
-
               </div>
-
             </div>
 
             {/* Floating professional card */}
 
             <div className="absolute -bottom-8 -left-5 hidden min-w-[210px] rounded-2xl border border-slate-200 bg-white p-4 shadow-xl shadow-slate-900/10 sm:block">
-
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-violet-600">
                 Focus
               </p>
@@ -695,19 +697,13 @@ function Hero() {
               <p className="mt-1 text-xs text-slate-500">
                 Building intelligent solutions
               </p>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </section>
   );
 }
-
 
 /* ================================= */
 /* GITHUB SVG ICON */
@@ -730,7 +726,6 @@ function GitHubIcon({
   );
 }
 
-
 /* ================================= */
 /* LINKEDIN SVG ICON */
 /* ================================= */
@@ -748,6 +743,27 @@ function LinkedInIcon({
       aria-hidden="true"
     >
       <path d="M6.94 8.5H3.56V19H6.94V8.5ZM5.25 3C4.17 3 3.3 3.87 3.3 4.95C3.3 6.03 4.17 6.9 5.25 6.9C6.33 6.9 7.2 6.03 7.2 4.95C7.2 3.87 6.33 3 5.25 3ZM20.7 12.98C20.7 9.82 19.01 8.35 16.76 8.35C14.95 8.35 14.14 9.35 13.69 10.05V8.5H10.31V19H13.69V13.8C13.69 12.43 13.95 11.1 15.65 11.1C17.33 11.1 17.35 12.67 17.35 13.89V19H20.73L20.7 12.98Z" />
+    </svg>
+  );
+}
+
+/* ================================= */
+/* GOOGLE SCHOLAR SVG ICON */
+/* ================================= */
+
+function GoogleScholarIcon({
+  size = 21,
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path d="M12 3 2 9l10 6 8-4.8V17h2V9L12 3Zm0 9.67L5.55 8.8 12 4.93l6.45 3.87L12 12.67ZM6 12.1V16c0 2.2 2.69 4 6 4s6-1.8 6-4v-3.9l-2 1.2V16c0 .84-1.58 2-4 2s-4-1.16-4-2v-2.7l-2-1.2Z" />
     </svg>
   );
 }

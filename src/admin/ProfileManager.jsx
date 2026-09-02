@@ -7,50 +7,81 @@ import {
   UserRound,
 } from "lucide-react";
 
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
+
 import { supabase } from "../services/supabase";
 
 function ProfileManager() {
-  const [profileId, setProfileId] =
-    useState(null);
+  const [
+    profileId,
+    setProfileId,
+  ] = useState(null);
 
-  const [fullName, setFullName] =
-    useState("");
+  const [
+    fullName,
+    setFullName,
+  ] = useState("");
 
-  const [headline, setHeadline] =
-    useState("");
+  const [
+    headline,
+    setHeadline,
+  ] = useState("");
 
   const [bio, setBio] =
     useState("");
 
-  const [location, setLocation] =
-    useState("");
+  const [
+    location,
+    setLocation,
+  ] = useState("");
 
-  const [email, setEmail] =
-    useState("");
+  const [
+    email,
+    setEmail,
+  ] = useState("");
 
-  const [githubUrl, setGithubUrl] =
-    useState("");
+  const [
+    githubUrl,
+    setGithubUrl,
+  ] = useState("");
 
-  const [linkedinUrl, setLinkedinUrl] =
-    useState("");
+  const [
+    linkedinUrl,
+    setLinkedinUrl,
+  ] = useState("");
+
+  const [
+    googleScholarUrl,
+    setGoogleScholarUrl,
+  ] = useState("");
 
   const [
     profileImageUrl,
     setProfileImageUrl,
   ] = useState("");
 
-  const [loading, setLoading] =
-    useState(true);
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
 
-  const [saving, setSaving] =
-    useState(false);
+  const [
+    saving,
+    setSaving,
+  ] = useState(false);
 
-  const [uploading, setUploading] =
-    useState(false);
+  const [
+    uploading,
+    setUploading,
+  ] = useState(false);
 
-  const [message, setMessage] =
-    useState("");
+  const [
+    message,
+    setMessage,
+  ] = useState("");
 
   const [
     errorMessage,
@@ -70,19 +101,23 @@ function ProfileManager() {
     setErrorMessage("");
 
     try {
-      const { data, error } =
-        await supabase
-          .from("profile")
-          .select("*")
-          .limit(1)
-          .maybeSingle();
+      const {
+        data,
+        error,
+      } = await supabase
+        .from("profile")
+        .select("*")
+        .limit(1)
+        .maybeSingle();
 
       if (error) {
         throw error;
       }
 
       if (data) {
-        setProfileId(data.id);
+        setProfileId(
+          data.id
+        );
 
         setFullName(
           data.full_name ?? ""
@@ -112,8 +147,14 @@ function ProfileManager() {
           data.linkedin_url ?? ""
         );
 
+        setGoogleScholarUrl(
+          data.google_scholar_url ??
+            ""
+        );
+
         setProfileImageUrl(
-          data.profile_image_url ?? ""
+          data.profile_image_url ??
+            ""
         );
       }
     } catch (error) {
@@ -135,7 +176,9 @@ function ProfileManager() {
   /* SAVE PROFILE */
   /* ================================= */
 
-  async function handleSave(event) {
+  async function handleSave(
+    event
+  ) {
     event.preventDefault();
 
     setSaving(true);
@@ -143,16 +186,33 @@ function ProfileManager() {
     setErrorMessage("");
 
     const profileData = {
-      full_name: fullName.trim(),
-      headline: headline.trim(),
-      bio: bio.trim(),
-      location: location.trim(),
-      email: email.trim(),
-      github_url: githubUrl.trim(),
+      full_name:
+        fullName.trim(),
+
+      headline:
+        headline.trim(),
+
+      bio:
+        bio.trim(),
+
+      location:
+        location.trim(),
+
+      email:
+        email.trim(),
+
+      github_url:
+        githubUrl.trim(),
+
       linkedin_url:
         linkedinUrl.trim(),
+
+      google_scholar_url:
+        googleScholarUrl.trim(),
+
       profile_image_url:
         profileImageUrl,
+
       updated_at:
         new Date().toISOString(),
     };
@@ -161,25 +221,36 @@ function ProfileManager() {
       let result;
 
       if (profileId) {
-        result = await supabase
-          .from("profile")
-          .update(profileData)
-          .eq("id", profileId)
-          .select()
-          .single();
+        result =
+          await supabase
+            .from("profile")
+            .update(
+              profileData
+            )
+            .eq(
+              "id",
+              profileId
+            )
+            .select()
+            .single();
       } else {
-        result = await supabase
-          .from("profile")
-          .insert(profileData)
-          .select()
-          .single();
+        result =
+          await supabase
+            .from("profile")
+            .insert(
+              profileData
+            )
+            .select()
+            .single();
       }
 
       if (result.error) {
         throw result.error;
       }
 
-      if (result.data?.id) {
+      if (
+        result.data?.id
+      ) {
         setProfileId(
           result.data.id
         );
@@ -244,7 +315,8 @@ function ProfileManager() {
         50 * 1024 * 1024;
 
       if (
-        file.size > maxFileSize
+        file.size >
+        maxFileSize
       ) {
         throw new Error(
           "Profile image must be smaller than 50 MB."
@@ -253,9 +325,6 @@ function ProfileManager() {
 
       /*
        * Get the original extension.
-       * This keeps formats such as
-       * gif, svg, avif, bmp, heic,
-       * heif, tiff, etc.
        */
 
       const fileExtension =
@@ -267,8 +336,8 @@ function ProfileManager() {
           : "";
 
       /*
-       * Create a safe fallback when
-       * an uploaded image has no
+       * Safe fallback when the
+       * uploaded image has no
        * filename extension.
        */
 
@@ -302,7 +371,9 @@ function ProfileManager() {
           {
             cacheControl:
               "3600",
+
             upsert: false,
+
             contentType:
               file.type,
           }
@@ -366,9 +437,7 @@ function ProfileManager() {
   if (loading) {
     return (
       <div className="flex min-h-[450px] items-center justify-center">
-
         <div className="text-center">
-
           <Loader2
             size={34}
             className="mx-auto animate-spin text-purple-400"
@@ -377,9 +446,7 @@ function ProfileManager() {
           <p className="mt-4 text-sm text-gray-500">
             Loading profile...
           </p>
-
         </div>
-
       </div>
     );
   }
@@ -390,11 +457,9 @@ function ProfileManager() {
 
   return (
     <div>
-
       {/* Header */}
 
       <div className="mb-8">
-
         <p className="text-sm font-medium text-purple-400">
           Portfolio Content
         </p>
@@ -405,10 +470,9 @@ function ProfileManager() {
 
         <p className="mt-3 text-gray-500">
           Manage the personal
-          information displayed on your
-          public portfolio.
+          information displayed on
+          your public portfolio.
         </p>
-
       </div>
 
       {/* Success */}
@@ -430,23 +494,19 @@ function ProfileManager() {
       {/* Main Grid */}
 
       <div className="grid gap-8 lg:grid-cols-[320px_minmax(0,1fr)]">
-
         {/* ========================= */}
         {/* PROFILE IMAGE */}
         {/* ========================= */}
 
         <div className="glass-card h-fit rounded-3xl p-6">
-
           <h3 className="mb-6 font-semibold">
             Profile Photo
           </h3>
 
           <div className="flex flex-col items-center">
-
             {/* Preview */}
 
             <div className="flex h-52 w-52 items-center justify-center overflow-hidden rounded-full border-2 border-purple-500/30 bg-white/5">
-
               {profileImageUrl ? (
                 <img
                   src={
@@ -461,7 +521,6 @@ function ProfileManager() {
                   className="text-gray-600"
                 />
               )}
-
             </div>
 
             {/* Upload */}
@@ -473,7 +532,6 @@ function ProfileManager() {
                   : "cursor-pointer hover:bg-purple-500/20"
               }`}
             >
-
               {uploading ? (
                 <>
                   <Loader2
@@ -504,15 +562,14 @@ function ProfileManager() {
                   uploading
                 }
               />
-
             </label>
 
             <p className="mt-4 text-center text-xs leading-5 text-gray-600">
-              Any browser-supported image format
+              Any browser-supported
+              image format
               <br />
               Maximum size: 50 MB
             </p>
-
           </div>
         </div>
 
@@ -521,12 +578,12 @@ function ProfileManager() {
         {/* ========================= */}
 
         <form
-          onSubmit={handleSave}
+          onSubmit={
+            handleSave
+          }
           className="glass-card rounded-3xl p-6 sm:p-8"
         >
-
           <div className="mb-7">
-
             <h3 className="text-xl font-semibold">
               Personal Information
             </h3>
@@ -536,16 +593,16 @@ function ProfileManager() {
               on your public
               portfolio.
             </p>
-
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
-
             {/* Full Name */}
 
             <InputField
               label="Full Name"
-              value={fullName}
+              value={
+                fullName
+              }
               onChange={
                 setFullName
               }
@@ -560,23 +617,29 @@ function ProfileManager() {
 
             <InputField
               label="Professional Headline"
-              value={headline}
+              value={
+                headline
+              }
               onChange={
                 setHeadline
               }
-              placeholder="Software Engineer & AI/ML Enthusiast"
+              placeholder="AI Engineer / ML Engineer"
             />
 
             {/* Location */}
 
             <InputField
               label="Location"
-              value={location}
+              value={
+                location
+              }
               onChange={
                 setLocation
               }
-              placeholder="Melbourne, Australia"
-              icon={MapPin}
+              placeholder="Melton, Melbourne, Australia"
+              icon={
+                MapPin
+              }
             />
 
             {/* Email */}
@@ -584,12 +647,16 @@ function ProfileManager() {
             <InputField
               label="Public Email"
               type="email"
-              value={email}
+              value={
+                email
+              }
               onChange={
                 setEmail
               }
               placeholder="your@email.com"
-              icon={Mail}
+              icon={
+                Mail
+              }
             />
 
             {/* GitHub */}
@@ -597,7 +664,9 @@ function ProfileManager() {
             <InputField
               label="GitHub URL"
               type="url"
-              value={githubUrl}
+              value={
+                githubUrl
+              }
               onChange={
                 setGithubUrl
               }
@@ -628,12 +697,43 @@ function ProfileManager() {
               }
             />
 
+            {/* Google Scholar */}
+
+            <InputField
+              label="Google Scholar URL"
+              type="url"
+              value={
+                googleScholarUrl
+              }
+              onChange={
+                setGoogleScholarUrl
+              }
+              placeholder="https://scholar.google.com/citations?user=..."
+              customIcon={
+                <GoogleScholarIcon
+                  size={18}
+                />
+              }
+            />
+          </div>
+
+          {/* Scholar help */}
+
+          <div className="mt-4 rounded-2xl border border-purple-500/10 bg-purple-500/5 px-4 py-3">
+            <p className="text-xs leading-5 text-gray-500">
+              Add your public Google
+              Scholar profile URL.
+              It will be used in the
+              public portfolio for
+              visitors to access your
+              research profile and
+              publications.
+            </p>
           </div>
 
           {/* Bio */}
 
           <div className="mt-6">
-
             <label
               htmlFor="profile-bio"
               className="mb-2 block text-sm text-gray-300"
@@ -661,13 +761,11 @@ function ProfileManager() {
             <div className="mt-2 text-right text-xs text-gray-600">
               {bio.length}/1000
             </div>
-
           </div>
 
           {/* Save Button */}
 
           <div className="mt-7">
-
             <button
               type="submit"
               disabled={
@@ -676,7 +774,6 @@ function ProfileManager() {
               }
               className="gradient-button flex items-center gap-2 rounded-xl px-6 py-3 font-semibold disabled:cursor-not-allowed disabled:opacity-50"
             >
-
               {saving ? (
                 <>
                   <Loader2
@@ -695,19 +792,13 @@ function ProfileManager() {
                   Save Changes
                 </>
               )}
-
             </button>
-
           </div>
-
         </form>
-
       </div>
-
     </div>
   );
 }
-
 
 /* ================================= */
 /* MIME TYPE → EXTENSION */
@@ -732,9 +823,10 @@ function getExtensionFromMimeType(
       "ico",
   };
 
-  return mimeMap[mimeType] || "";
+  return (
+    mimeMap[mimeType] || ""
+  );
 }
-
 
 /* ================================= */
 /* INPUT COMPONENT */
@@ -757,7 +849,6 @@ function InputField({
 
   return (
     <div>
-
       <label
         htmlFor={inputId}
         className="mb-2 block text-sm text-gray-300"
@@ -769,11 +860,9 @@ function InputField({
             *
           </span>
         )}
-
       </label>
 
       <div className="flex items-center rounded-xl border border-white/10 bg-white/5 px-4 transition focus-within:border-purple-500/60">
-
         {Icon && (
           <Icon
             size={18}
@@ -806,13 +895,10 @@ function InputField({
           }
           className="w-full bg-transparent px-3 py-3 text-white outline-none placeholder:text-gray-600"
         />
-
       </div>
-
     </div>
   );
 }
-
 
 /* ================================= */
 /* GITHUB SVG ICON */
@@ -835,7 +921,6 @@ function GitHubIcon({
   );
 }
 
-
 /* ================================= */
 /* LINKEDIN SVG ICON */
 /* ================================= */
@@ -853,6 +938,27 @@ function LinkedInIcon({
       aria-hidden="true"
     >
       <path d="M6.94 8.5H3.56V19H6.94V8.5ZM5.25 3C4.17 3 3.3 3.87 3.3 4.95C3.3 6.03 4.17 6.9 5.25 6.9C6.33 6.9 7.2 6.03 7.2 4.95C7.2 3.87 6.33 3 5.25 3ZM20.7 12.98C20.7 9.82 19.01 8.35 16.76 8.35C14.95 8.35 14.14 9.35 13.69 10.05V8.5H10.31V19H13.69V13.8C13.69 12.43 13.95 11.1 15.65 11.1C17.33 11.1 17.35 12.67 17.35 13.89V19H20.73L20.7 12.98Z" />
+    </svg>
+  );
+}
+
+/* ================================= */
+/* GOOGLE SCHOLAR SVG ICON */
+/* ================================= */
+
+function GoogleScholarIcon({
+  size = 18,
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path d="M12 3 2 9l10 6 8-4.8V17h2V9L12 3Zm0 9.67L5.55 8.8 12 4.93l6.45 3.87L12 12.67ZM6 12.1V16c0 2.2 2.69 4 6 4s6-1.8 6-4v-3.9l-2 1.2V16c0 .84-1.58 2-4 2s-4-1.16-4-2v-2.7l-2-1.2Z" />
     </svg>
   );
 }
