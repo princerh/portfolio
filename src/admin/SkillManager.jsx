@@ -17,12 +17,48 @@ import {
 
 import { supabase } from "../services/supabase";
 
+/* ================================= */
+/* SKILL OPTIONS */
+/* ================================= */
+
+const SKILL_CATEGORIES = [
+  "Programming Languages",
+  "Frontend",
+  "Backend",
+  "Database",
+  "AI / Machine Learning",
+  "AI Frameworks",
+  "Computer Vision",
+  "Generative AI",
+  "Data Science",
+  "Cloud",
+  "DevOps / MLOps",
+  "Research",
+  "Professional Skills",
+  "Tools",
+  "Other",
+];
+
+const SKILL_LEVELS = [
+  "Learning",
+  "Intermediate",
+  "Advanced",
+];
+
+/* ================================= */
+/* DEFAULT FORM */
+/* ================================= */
+
 const EMPTY_FORM = {
   name: "",
   category: "Frontend",
   level: "Intermediate",
   featured: false,
 };
+
+/* ================================= */
+/* SKILL MANAGER */
+/* ================================= */
 
 function SkillManager() {
   const [skills, setSkills] =
@@ -134,9 +170,20 @@ function SkillManager() {
         );
       }
 
+      if (!form.category) {
+        throw new Error(
+          "Skill category is required."
+        );
+      }
+
+      if (!form.level) {
+        throw new Error(
+          "Skill level is required."
+        );
+      }
+
       const skillData = {
-        name:
-          form.name.trim(),
+        name: form.name.trim(),
 
         category:
           form.category,
@@ -337,9 +384,7 @@ function SkillManager() {
   if (loading) {
     return (
       <div className="flex min-h-[450px] items-center justify-center">
-
         <div className="text-center">
-
           <Loader2
             size={34}
             className="mx-auto animate-spin text-purple-400"
@@ -348,20 +393,18 @@ function SkillManager() {
           <p className="mt-4 text-sm text-gray-500">
             Loading skills...
           </p>
-
         </div>
-
       </div>
     );
   }
 
   return (
     <div>
-
-      {/* Header */}
+      {/* ================================= */}
+      {/* HEADER */}
+      {/* ================================= */}
 
       <div className="mb-8">
-
         <p className="text-sm font-medium text-purple-400">
           Portfolio Content
         </p>
@@ -372,14 +415,16 @@ function SkillManager() {
 
         <p className="mt-3 text-gray-500">
           Manage the technologies,
-          frameworks and technical
+          frameworks, research,
+          professional and technical
           skills displayed on your
           portfolio.
         </p>
-
       </div>
 
-      {/* Success */}
+      {/* ================================= */}
+      {/* SUCCESS MESSAGE */}
+      {/* ================================= */}
 
       {message && (
         <div className="mb-6 rounded-xl border border-green-500/20 bg-green-500/10 px-4 py-3 text-sm text-green-300">
@@ -387,7 +432,9 @@ function SkillManager() {
         </div>
       )}
 
-      {/* Error */}
+      {/* ================================= */}
+      {/* ERROR MESSAGE */}
+      {/* ================================= */}
 
       {errorMessage && (
         <div className="mb-6 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
@@ -395,10 +442,11 @@ function SkillManager() {
         </div>
       )}
 
-      {/* Stats */}
+      {/* ================================= */}
+      {/* STATS */}
+      {/* ================================= */}
 
       <div className="mb-8 grid gap-4 sm:grid-cols-3">
-
         <StatCard
           title="Total Skills"
           value={stats.total}
@@ -413,7 +461,6 @@ function SkillManager() {
           title="Categories"
           value={stats.categories}
         />
-
       </div>
 
       {/* ================================= */}
@@ -424,11 +471,8 @@ function SkillManager() {
         onSubmit={handleSave}
         className="glass-card mb-10 rounded-3xl p-6 sm:p-8"
       >
-
         <div className="mb-7 flex flex-wrap items-center justify-between gap-4">
-
           <div>
-
             <h3 className="text-xl font-semibold">
               {editingId
                 ? "Edit Skill"
@@ -437,10 +481,10 @@ function SkillManager() {
 
             <p className="mt-2 text-sm text-gray-500">
               Add a technology,
-              framework or technical
+              framework, research,
+              professional or technical
               skill to your portfolio.
             </p>
-
           </div>
 
           {editingId && (
@@ -449,19 +493,17 @@ function SkillManager() {
               onClick={resetForm}
               className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-gray-300 transition hover:bg-white/10"
             >
-
               <X size={17} />
 
               Cancel Edit
-
             </button>
           )}
-
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
-
-          {/* Skill Name */}
+          {/* ================================= */}
+          {/* SKILL NAME */}
+          {/* ================================= */}
 
           <InputField
             label="Skill Name"
@@ -476,10 +518,11 @@ function SkillManager() {
             required
           />
 
-          {/* Category */}
+          {/* ================================= */}
+          {/* CATEGORY */}
+          {/* ================================= */}
 
           <div>
-
             <label className="mb-2 block text-sm text-gray-300">
               Category
             </label>
@@ -494,59 +537,24 @@ function SkillManager() {
               }
               className="w-full rounded-xl border border-white/10 bg-[#111427] px-4 py-3 text-white outline-none focus:border-purple-500/60"
             >
-
-              <option>
-                Programming Languages
-              </option>
-
-              <option>
-                Frontend
-              </option>
-
-              <option>
-                Backend
-              </option>
-
-              <option>
-                Database
-              </option>
-
-              <option>
-                AI / Machine Learning
-              </option>
-
-              <option>
-                Computer Vision
-              </option>
-
-              <option>
-                Generative AI
-              </option>
-
-              <option>
-                DevOps / MLOps
-              </option>
-
-              <option>
-                Cloud
-              </option>
-
-              <option>
-                Tools
-              </option>
-
-              <option>
-                Other
-              </option>
-
+              {SKILL_CATEGORIES.map(
+                (category) => (
+                  <option
+                    key={category}
+                    value={category}
+                  >
+                    {category}
+                  </option>
+                )
+              )}
             </select>
-
           </div>
 
-          {/* Level */}
+          {/* ================================= */}
+          {/* LEVEL */}
+          {/* ================================= */}
 
           <div>
-
             <label className="mb-2 block text-sm text-gray-300">
               Level
             </label>
@@ -561,33 +569,29 @@ function SkillManager() {
               }
               className="w-full rounded-xl border border-white/10 bg-[#111427] px-4 py-3 text-white outline-none focus:border-purple-500/60"
             >
-
-              <option>
-                Learning
-              </option>
-
-              <option>
-                Intermediate
-              </option>
-
-              <option>
-                Advanced
-              </option>
-
+              {SKILL_LEVELS.map(
+                (level) => (
+                  <option
+                    key={level}
+                    value={level}
+                  >
+                    {level}
+                  </option>
+                )
+              )}
             </select>
-
           </div>
 
-          {/* Featured */}
+          {/* ================================= */}
+          {/* FEATURED */}
+          {/* ================================= */}
 
           <div>
-
             <label className="mb-2 block text-sm text-gray-300">
               Highlight
             </label>
 
             <label className="flex min-h-[48px] cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4">
-
               <input
                 type="checkbox"
                 checked={form.featured}
@@ -603,21 +607,20 @@ function SkillManager() {
               <span className="text-sm text-gray-300">
                 Featured Skill
               </span>
-
             </label>
-
           </div>
-
         </div>
 
-        <div className="mt-8">
+        {/* ================================= */}
+        {/* SAVE BUTTON */}
+        {/* ================================= */}
 
+        <div className="mt-8">
           <button
             type="submit"
             disabled={saving}
             className="gradient-button flex items-center gap-2 rounded-xl px-6 py-3 font-semibold disabled:cursor-not-allowed disabled:opacity-50"
           >
-
             {saving ? (
               <>
                 <Loader2
@@ -640,11 +643,8 @@ function SkillManager() {
                 Add Skill
               </>
             )}
-
           </button>
-
         </div>
-
       </form>
 
       {/* ================================= */}
@@ -652,28 +652,21 @@ function SkillManager() {
       {/* ================================= */}
 
       <div>
-
         <div className="mb-5">
-
           <h3 className="text-xl font-semibold">
             Existing Skills
           </h3>
 
           <p className="mt-1 text-sm text-gray-500">
-
             {skills.length}{" "}
-
             {skills.length === 1
               ? "skill"
               : "skills"}
-
           </p>
-
         </div>
 
         {skills.length === 0 ? (
           <div className="glass-card flex min-h-[250px] flex-col items-center justify-center rounded-3xl p-8 text-center">
-
             <Sparkles
               size={45}
               className="text-gray-600"
@@ -687,11 +680,9 @@ function SkillManager() {
               Add your first skill
               using the form above.
             </p>
-
           </div>
         ) : (
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-
             {skills.map((skill) => (
               <SkillCard
                 key={skill.id}
@@ -708,16 +699,12 @@ function SkillManager() {
                 }
               />
             ))}
-
           </div>
         )}
-
       </div>
-
     </div>
   );
 }
-
 
 /* ================================= */
 /* SKILL CARD */
@@ -731,11 +718,8 @@ function SkillCard({
 }) {
   return (
     <div className="glass-card rounded-2xl p-6">
-
       <div className="flex items-start justify-between gap-4">
-
         <div>
-
           <p className="text-xs font-medium text-purple-400">
             {skill.category}
           </p>
@@ -743,7 +727,6 @@ function SkillCard({
           <h4 className="mt-2 text-lg font-semibold">
             {skill.name}
           </h4>
-
         </div>
 
         {skill.featured && (
@@ -753,11 +736,9 @@ function SkillCard({
             fill="currentColor"
           />
         )}
-
       </div>
 
       <div className="mt-4">
-
         <span
           className={`inline-flex rounded-full border px-3 py-1 text-xs font-medium ${
             skill.level ===
@@ -771,23 +752,21 @@ function SkillCard({
         >
           {skill.level}
         </span>
-
       </div>
 
-      {/* Actions */}
+      {/* ================================= */}
+      {/* ACTIONS */}
+      {/* ================================= */}
 
       <div className="mt-6 flex gap-3 border-t border-white/10 pt-5">
-
         <button
           type="button"
           onClick={onEdit}
           className="flex items-center gap-2 rounded-xl border border-purple-500/20 bg-purple-500/10 px-4 py-2 text-sm text-purple-300 transition hover:bg-purple-500/20"
         >
-
           <Pencil size={16} />
 
           Edit
-
         </button>
 
         <button
@@ -796,7 +775,6 @@ function SkillCard({
           disabled={deleting}
           className="flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2 text-sm text-red-300 transition hover:bg-red-500/20 disabled:opacity-50"
         >
-
           {deleting ? (
             <Loader2
               size={16}
@@ -807,15 +785,11 @@ function SkillCard({
           )}
 
           Delete
-
         </button>
-
       </div>
-
     </div>
   );
 }
-
 
 /* ================================= */
 /* INPUT FIELD */
@@ -830,9 +804,7 @@ function InputField({
 }) {
   return (
     <div>
-
       <label className="mb-2 block text-sm text-gray-300">
-
         {label}
 
         {required && (
@@ -840,7 +812,6 @@ function InputField({
             *
           </span>
         )}
-
       </label>
 
       <input
@@ -855,11 +826,9 @@ function InputField({
         required={required}
         className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-gray-600 focus:border-purple-500/60"
       />
-
     </div>
   );
 }
-
 
 /* ================================= */
 /* STAT CARD */
@@ -871,7 +840,6 @@ function StatCard({
 }) {
   return (
     <div className="glass-card rounded-2xl p-5">
-
       <p className="text-sm text-gray-500">
         {title}
       </p>
@@ -879,7 +847,6 @@ function StatCard({
       <p className="mt-2 text-2xl font-bold text-white">
         {value}
       </p>
-
     </div>
   );
 }
