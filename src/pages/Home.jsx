@@ -5,13 +5,13 @@ import Skills from "../components/Skills";
 import Education from "../components/Education";
 import Experience from "../components/Experience";
 import Documents from "../components/Documents";
+import BeyondTheCode from "../components/BeyondTheCode";
 import Contact from "../components/Contact";
 import Footer from "../components/Footer";
 
 function Home() {
   return (
     <div className="min-h-screen bg-[#050816] text-white">
-
       <Navbar />
 
       <main>
@@ -21,11 +21,14 @@ function Home() {
         <Education />
         <Experience />
         <Documents />
+
+        {/* Public personal gallery preview */}
+        <BeyondTheCode />
+
         <Contact />
       </main>
 
       <Footer />
-
     </div>
   );
 }

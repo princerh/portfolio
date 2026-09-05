@@ -11,6 +11,11 @@ import {
 } from "react";
 
 import {
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+
+import {
   useTheme,
 } from "../context/ThemeContext";
 
@@ -40,6 +45,10 @@ const navItems = [
     href: "#documents",
   },
   {
+    name: "Beyond the Code",
+    href: "#beyond",
+  },
+  {
     name: "Contact",
     href: "#contact",
   },
@@ -52,10 +61,19 @@ function Navbar() {
   const [scrolled, setScrolled] =
     useState(false);
 
+  const navigate =
+    useNavigate();
+
+  const location =
+    useLocation();
+
   const {
     theme,
     toggleTheme,
   } = useTheme();
+
+  const isDark =
+    theme === "dark";
 
   useEffect(() => {
     function handleScroll() {
@@ -79,6 +97,10 @@ function Navbar() {
     };
   }, []);
 
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
+
   function closeMenu() {
     setOpen(false);
   }
@@ -87,8 +109,105 @@ function Navbar() {
     toggleTheme();
   }
 
-  const isDark =
-    theme === "dark";
+  function scrollToSection(
+    href
+  ) {
+    const sectionId =
+      href.replace("#", "");
+
+    const element =
+      document.getElementById(
+        sectionId
+      );
+
+    if (!element) {
+      return;
+    }
+
+    const navbarHeight = 80;
+
+    const elementTop =
+      element.getBoundingClientRect()
+        .top +
+      window.scrollY;
+
+    const targetPosition =
+      elementTop -
+      navbarHeight;
+
+    window.scrollTo({
+      top:
+        targetPosition,
+      behavior: "smooth",
+    });
+  }
+
+  function handleNavigation(
+    event,
+    href
+  ) {
+    event.preventDefault();
+
+    closeMenu();
+
+    if (
+      location.pathname === "/"
+    ) {
+      scrollToSection(
+        href
+      );
+
+      window.history.replaceState(
+        null,
+        "",
+        href
+      );
+
+      return;
+    }
+
+    navigate(`/${href}`);
+
+    setTimeout(() => {
+      scrollToSection(
+        href
+      );
+    }, 150);
+  }
+
+  function handleLogoClick(
+    event
+  ) {
+    event.preventDefault();
+
+    closeMenu();
+
+    if (
+      location.pathname === "/"
+    ) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+
+      window.history.replaceState(
+        null,
+        "",
+        "#home"
+      );
+
+      return;
+    }
+
+    navigate("/#home");
+
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }, 150);
+  }
 
   return (
     <header
@@ -106,8 +225,10 @@ function Navbar() {
         {/* ================================= */}
 
         <a
-          href="#home"
-          onClick={closeMenu}
+          href="/#home"
+          onClick={
+            handleLogoClick
+          }
           className="gradient-text text-2xl font-bold"
         >
           Prince.
@@ -117,7 +238,7 @@ function Navbar() {
         {/* DESKTOP NAVIGATION */}
         {/* ================================= */}
 
-        <div className="hidden items-center gap-7 lg:flex">
+        <div className="hidden items-center gap-6 lg:flex">
 
           {navItems.map(
             (item) => (
@@ -125,10 +246,16 @@ function Navbar() {
                 key={
                   item.name
                 }
-                href={
-                  item.href
+                href={`/${item.href}`}
+                onClick={(
+                  event
+                ) =>
+                  handleNavigation(
+                    event,
+                    item.href
+                  )
                 }
-                className="portfolio-nav-link text-sm font-medium transition"
+                className="portfolio-nav-link whitespace-nowrap text-sm font-medium transition"
               >
                 {item.name}
               </a>
@@ -154,7 +281,7 @@ function Navbar() {
                 ? "Switch to light theme"
                 : "Switch to dark theme"
             }
-            className="portfolio-theme-button flex h-10 w-10 items-center justify-center rounded-xl border transition duration-300"
+            className="portfolio-theme-button flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition duration-300"
           >
 
             {isDark ? (
@@ -247,7 +374,7 @@ function Navbar() {
       <div
         className={`portfolio-mobile-menu overflow-hidden backdrop-blur-xl transition-all duration-300 lg:hidden ${
           open
-            ? "max-h-[650px] border-t opacity-100"
+            ? "max-h-[720px] border-t opacity-100"
             : "max-h-0 border-transparent opacity-0"
         }`}
       >
@@ -260,11 +387,14 @@ function Navbar() {
                 key={
                   item.name
                 }
-                href={
-                  item.href
-                }
-                onClick={
-                  closeMenu
+                href={`/${item.href}`}
+                onClick={(
+                  event
+                ) =>
+                  handleNavigation(
+                    event,
+                    item.href
+                  )
                 }
                 className="portfolio-mobile-nav-link block rounded-xl px-4 py-3 text-sm font-medium transition"
               >

@@ -5,17 +5,30 @@ import {
 } from "react-router-dom";
 
 import Home from "./pages/Home";
+import Gallery from "./pages/Gallery";
+
 import AdminLogin from "./admin/AdminLogin";
 import AdminDashboard from "./admin/AdminDashboard";
+
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <Routes>
+
+      {/* Public */}
+
       <Route
         path="/"
         element={<Home />}
       />
+
+      <Route
+        path="/gallery"
+        element={<Gallery />}
+      />
+
+      {/* Admin */}
 
       <Route
         path="/admin"
@@ -31,6 +44,8 @@ function App() {
         }
       />
 
+      {/* Fallback */}
+
       <Route
         path="*"
         element={
@@ -40,6 +55,7 @@ function App() {
           />
         }
       />
+
     </Routes>
   );
 }

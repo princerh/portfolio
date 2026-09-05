@@ -1,15 +1,18 @@
 import {
   BriefcaseBusiness,
+  Camera,
   FileText,
   FolderKanban,
   GraduationCap,
   Image,
+  Images,
   LayoutDashboard,
   LogOut,
   Mail,
   Menu,
   Settings,
   Sparkles,
+  Tags,
   UserRound,
   X,
 } from "lucide-react";
@@ -26,6 +29,9 @@ import SkillManager from "./SkillManager";
 import EducationManager from "./EducationManager";
 import ExperienceManager from "./ExperienceManager";
 import DocumentManager from "./DocumentManager";
+import BeyondSettingsManager from "./BeyondSettingsManager";
+import GalleryCategoryManager from "./GalleryCategoryManager";
+import GalleryManager from "./GalleryManager";
 import MessageManager from "./MessageManager";
 import SettingsManager from "./SettingsManager";
 
@@ -37,8 +43,12 @@ function AdminDashboard() {
     logout,
   } = useAuth();
 
-  const [activeSection, setActiveSection] =
-    useState("Dashboard");
+  const [
+    activeSection,
+    setActiveSection,
+  ] = useState(
+    "Dashboard"
+  );
 
   const [
     mobileSidebarOpen,
@@ -79,6 +89,18 @@ function AdminDashboard() {
       icon: Image,
     },
     {
+      name: "Beyond Settings",
+      icon: Camera,
+    },
+    {
+      name: "Gallery Categories",
+      icon: Tags,
+    },
+    {
+      name: "Gallery",
+      icon: Images,
+    },
+    {
       name: "Messages",
       icon: Mail,
     },
@@ -88,13 +110,16 @@ function AdminDashboard() {
     },
   ];
 
-  /* ======================================= */
-  /* CHANGE SECTION */
-  /* ======================================= */
+  function handleSectionChange(
+    section
+  ) {
+    setActiveSection(
+      section
+    );
 
-  function handleSectionChange(section) {
-    setActiveSection(section);
-    setMobileSidebarOpen(false);
+    setMobileSidebarOpen(
+      false
+    );
 
     window.scrollTo({
       top: 0,
@@ -102,14 +127,13 @@ function AdminDashboard() {
     });
   }
 
-  /* ======================================= */
-  /* LOGOUT */
-  /* ======================================= */
-
   async function handleLogout() {
-    setMobileSidebarOpen(false);
+    setMobileSidebarOpen(
+      false
+    );
 
-    const { error } = await logout();
+    const { error } =
+      await logout();
 
     if (error) {
       console.error(
@@ -131,13 +155,12 @@ function AdminDashboard() {
   return (
     <div className="min-h-screen bg-[#050816] text-white">
 
-      {/* ================================= */}
-      {/* MOBILE / TABLET HEADER */}
-      {/* ================================= */}
+      {/* Mobile Header */}
 
       <header className="sticky top-0 z-30 flex h-[72px] items-center justify-between border-b border-white/10 bg-[#090c1b]/95 px-5 backdrop-blur-xl lg:hidden">
 
         <div>
+
           <h1 className="gradient-text text-xl font-bold">
             Prince.
           </h1>
@@ -145,15 +168,20 @@ function AdminDashboard() {
           <p className="mt-0.5 text-[11px] text-gray-500">
             Portfolio Admin
           </p>
+
         </div>
 
         <button
           type="button"
           onClick={() =>
-            setMobileSidebarOpen(true)
+            setMobileSidebarOpen(
+              true
+            )
           }
           aria-label="Open admin navigation"
-          aria-expanded={mobileSidebarOpen}
+          aria-expanded={
+            mobileSidebarOpen
+          }
           className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-300 transition hover:border-purple-500/30 hover:bg-purple-500/10 hover:text-purple-300"
         >
           <Menu size={22} />
@@ -161,13 +189,13 @@ function AdminDashboard() {
 
       </header>
 
-      {/* ================================= */}
-      {/* MOBILE / TABLET OVERLAY */}
-      {/* ================================= */}
+      {/* Mobile Overlay */}
 
       <div
         onClick={() =>
-          setMobileSidebarOpen(false)
+          setMobileSidebarOpen(
+            false
+          )
         }
         className={`fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
           mobileSidebarOpen
@@ -176,9 +204,7 @@ function AdminDashboard() {
         }`}
       />
 
-      {/* ================================= */}
-      {/* MOBILE / TABLET SIDEBAR */}
-      {/* ================================= */}
+      {/* Mobile Sidebar */}
 
       <aside
         className={`fixed bottom-0 left-0 top-0 z-50 flex w-[280px] max-w-[85vw] flex-col border-r border-white/10 bg-[#090c1b] p-6 shadow-2xl transition-transform duration-300 ease-out lg:hidden ${
@@ -188,11 +214,10 @@ function AdminDashboard() {
         }`}
       >
 
-        {/* Mobile Sidebar Header */}
-
         <div className="mb-8 flex items-start justify-between gap-4">
 
           <div>
+
             <h1 className="gradient-text text-2xl font-bold">
               Prince.
             </h1>
@@ -200,12 +225,15 @@ function AdminDashboard() {
             <p className="mt-1 text-xs text-gray-500">
               Portfolio Admin
             </p>
+
           </div>
 
           <button
             type="button"
             onClick={() =>
-              setMobileSidebarOpen(false)
+              setMobileSidebarOpen(
+                false
+              )
             }
             aria-label="Close admin navigation"
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-gray-300 transition hover:border-purple-500/30 hover:text-purple-300"
@@ -215,43 +243,47 @@ function AdminDashboard() {
 
         </div>
 
-        {/* Mobile Navigation */}
-
         <nav className="flex-1 space-y-2 overflow-y-auto pr-1">
 
-          {menuItems.map((item) => {
-            const Icon = item.icon;
+          {menuItems.map(
+            (item) => {
+              const Icon =
+                item.icon;
 
-            const isActive =
-              activeSection === item.name;
+              const isActive =
+                activeSection ===
+                item.name;
 
-            return (
-              <button
-                key={item.name}
-                type="button"
-                onClick={() =>
-                  handleSectionChange(
+              return (
+                <button
+                  key={
                     item.name
-                  )
-                }
-                className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm transition duration-200 ${
-                  isActive
-                    ? "bg-purple-500/15 text-purple-300"
-                    : "text-gray-400 hover:bg-purple-500/10 hover:text-purple-300"
-                }`}
-              >
-                <Icon size={19} />
+                  }
+                  type="button"
+                  onClick={() =>
+                    handleSectionChange(
+                      item.name
+                    )
+                  }
+                  className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm transition duration-200 ${
+                    isActive
+                      ? "bg-purple-500/15 text-purple-300"
+                      : "text-gray-400 hover:bg-purple-500/10 hover:text-purple-300"
+                  }`}
+                >
+                  <Icon
+                    size={19}
+                  />
 
-                <span>
-                  {item.name}
-                </span>
-              </button>
-            );
-          })}
+                  <span>
+                    {item.name}
+                  </span>
+                </button>
+              );
+            }
+          )}
 
         </nav>
-
-        {/* Mobile User */}
 
         <div className="mt-6 border-t border-white/10 pt-5">
 
@@ -265,10 +297,14 @@ function AdminDashboard() {
 
           <button
             type="button"
-            onClick={handleLogout}
+            onClick={
+              handleLogout
+            }
             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-red-400 transition hover:bg-red-500/10"
           >
-            <LogOut size={19} />
+            <LogOut
+              size={19}
+            />
 
             Logout
           </button>
@@ -277,19 +313,11 @@ function AdminDashboard() {
 
       </aside>
 
-      {/* ================================= */}
-      {/* MAIN ADMIN LAYOUT */}
-      {/* ================================= */}
-
       <div className="flex min-h-[calc(100vh-72px)] lg:min-h-screen">
 
-        {/* ================================= */}
-        {/* DESKTOP SIDEBAR */}
-        {/* ================================= */}
+        {/* Desktop Sidebar */}
 
         <aside className="hidden w-64 shrink-0 border-r border-white/10 bg-[#090c1b] p-6 lg:flex lg:min-h-screen lg:flex-col">
-
-          {/* Logo */}
 
           <div className="mb-10">
 
@@ -303,44 +331,48 @@ function AdminDashboard() {
 
           </div>
 
-          {/* Navigation */}
+          <nav className="flex-1 space-y-2 overflow-y-auto pr-1">
 
-          <nav className="flex-1 space-y-2">
+            {menuItems.map(
+              (item) => {
+                const Icon =
+                  item.icon;
 
-            {menuItems.map((item) => {
-              const Icon = item.icon;
+                const isActive =
+                  activeSection ===
+                    item.name;
 
-              const isActive =
-                activeSection === item.name;
-
-              return (
-                <button
-                  key={item.name}
-                  type="button"
-                  onClick={() =>
-                    handleSectionChange(
+                return (
+                  <button
+                    key={
                       item.name
-                    )
-                  }
-                  className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm transition duration-200 ${
-                    isActive
-                      ? "bg-purple-500/15 text-purple-300"
-                      : "text-gray-400 hover:bg-purple-500/10 hover:text-purple-300"
-                  }`}
-                >
-                  <Icon size={19} />
+                    }
+                    type="button"
+                    onClick={() =>
+                      handleSectionChange(
+                        item.name
+                      )
+                    }
+                    className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm transition duration-200 ${
+                      isActive
+                        ? "bg-purple-500/15 text-purple-300"
+                        : "text-gray-400 hover:bg-purple-500/10 hover:text-purple-300"
+                    }`}
+                  >
+                    <Icon
+                      size={19}
+                    />
 
-                  <span>
-                    {item.name}
-                  </span>
+                    <span>
+                      {item.name}
+                    </span>
 
-                </button>
-              );
-            })}
+                  </button>
+                );
+              }
+            )}
 
           </nav>
-
-          {/* User Information */}
 
           <div className="mt-8 border-t border-white/10 pt-6">
 
@@ -354,10 +386,14 @@ function AdminDashboard() {
 
             <button
               type="button"
-              onClick={handleLogout}
+              onClick={
+                handleLogout
+              }
               className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-red-400 transition duration-200 hover:bg-red-500/10"
             >
-              <LogOut size={19} />
+              <LogOut
+                size={19}
+              />
 
               Logout
             </button>
@@ -366,17 +402,14 @@ function AdminDashboard() {
 
         </aside>
 
-        {/* ================================= */}
-        {/* MAIN CONTENT */}
-        {/* ================================= */}
+        {/* Main Content */}
 
         <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-10">
 
           <div className="mx-auto max-w-7xl">
 
-            {/* Dashboard */}
-
-            {activeSection === "Dashboard" && (
+            {activeSection ===
+              "Dashboard" && (
               <DashboardHome
                 user={user}
                 setActiveSection={
@@ -385,58 +418,64 @@ function AdminDashboard() {
               />
             )}
 
-            {/* Profile */}
-
-            {activeSection === "Profile" && (
+            {activeSection ===
+              "Profile" && (
               <ProfileManager />
             )}
 
-            {/* Resume */}
-
-            {activeSection === "Resume" && (
+            {activeSection ===
+              "Resume" && (
               <ResumeManager />
             )}
 
-            {/* Projects */}
-
-            {activeSection === "Projects" && (
+            {activeSection ===
+              "Projects" && (
               <ProjectManager />
             )}
 
-            {/* Skills */}
-
-            {activeSection === "Skills" && (
+            {activeSection ===
+              "Skills" && (
               <SkillManager />
             )}
 
-            {/* Education */}
-
-            {activeSection === "Education" && (
+            {activeSection ===
+              "Education" && (
               <EducationManager />
             )}
 
-            {/* Experience */}
-
-            {activeSection === "Experience" && (
+            {activeSection ===
+              "Experience" && (
               <ExperienceManager />
             )}
 
-            {/* Documents */}
-
-            {activeSection === "Documents" && (
+            {activeSection ===
+              "Documents" && (
               <DocumentManager />
             )}
 
-            {/* Messages */}
+            {activeSection ===
+              "Beyond Settings" && (
+              <BeyondSettingsManager />
+            )}
 
-            {activeSection === "Messages" && (
+            {activeSection ===
+              "Gallery Categories" && (
+              <GalleryCategoryManager />
+            )}
+
+            {activeSection ===
+              "Gallery" && (
+              <GalleryManager />
+            )}
+
+            {activeSection ===
+              "Messages" && (
               <MessageManager />
             )}
 
-            {/* Settings */}
-
-            {activeSection === "Settings" && (
-            <SettingsManager /> 
+            {activeSection ===
+              "Settings" && (
+              <SettingsManager />
             )}
 
           </div>
@@ -444,14 +483,10 @@ function AdminDashboard() {
         </main>
 
       </div>
+
     </div>
   );
 }
-
-
-/* ======================================= */
-/* DASHBOARD HOME */
-/* ======================================= */
 
 function DashboardHome({
   user,
@@ -459,8 +494,6 @@ function DashboardHome({
 }) {
   return (
     <>
-
-      {/* Header */}
 
       <div className="mb-10">
 
@@ -490,24 +523,24 @@ function DashboardHome({
 
       </div>
 
-      {/* ================================= */}
-      {/* STATISTICS */}
-      {/* ================================= */}
-
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
 
         <DashboardCard
           title="Projects"
           value="Manage"
           description="Portfolio projects"
-          icon={FolderKanban}
+          icon={
+            FolderKanban
+          }
         />
 
         <DashboardCard
           title="Skills"
           value="Manage"
           description="Portfolio skills"
-          icon={Sparkles}
+          icon={
+            Sparkles
+          }
         />
 
         <DashboardCard
@@ -518,17 +551,13 @@ function DashboardHome({
         />
 
         <DashboardCard
-          title="Resume"
+          title="Gallery"
           value="Manage"
-          description="Upload or replace resume"
-          icon={FileText}
+          description="Beyond the Code photos"
+          icon={Images}
         />
 
       </div>
-
-      {/* ================================= */}
-      {/* QUICK ACTIONS */}
-      {/* ================================= */}
 
       <div className="mt-8">
 
@@ -563,7 +592,9 @@ function DashboardHome({
           <QuickAction
             title="Add Project"
             description="Add software engineering, AI/ML or research projects."
-            icon={FolderKanban}
+            icon={
+              FolderKanban
+            }
             onClick={() =>
               setActiveSection(
                 "Projects"
@@ -586,61 +617,123 @@ function DashboardHome({
 
       </div>
 
-      {/* ================================= */}
-      {/* CONTENT MANAGEMENT */}
-      {/* ================================= */}
+      <div className="mt-8">
 
-      <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <h3 className="mb-5 text-xl font-semibold">
+          Content Management
+        </h3>
 
-        <QuickAction
-          title="Manage Skills"
-          description="Add or update technologies, frameworks and technical skills."
-          icon={Sparkles}
-          onClick={() =>
-            setActiveSection(
-              "Skills"
-            )
-          }
-        />
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
 
-        <QuickAction
-          title="Manage Education"
-          description="Add or update your academic qualifications and results."
-          icon={GraduationCap}
-          onClick={() =>
-            setActiveSection(
-              "Education"
-            )
-          }
-        />
+          <QuickAction
+            title="Manage Skills"
+            description="Add or update technologies, frameworks and technical skills."
+            icon={Sparkles}
+            onClick={() =>
+              setActiveSection(
+                "Skills"
+              )
+            }
+          />
 
-        <QuickAction
-          title="Manage Experience"
-          description="Add professional, technical and research experience."
-          icon={BriefcaseBusiness}
-          onClick={() =>
-            setActiveSection(
-              "Experience"
-            )
-          }
-        />
+          <QuickAction
+            title="Manage Education"
+            description="Add or update your academic qualifications and results."
+            icon={
+              GraduationCap
+            }
+            onClick={() =>
+              setActiveSection(
+                "Education"
+              )
+            }
+          />
 
-        <QuickAction
-          title="Manage Documents"
-          description="Upload certificates, reports, publications and other files."
-          icon={Image}
-          onClick={() =>
-            setActiveSection(
-              "Documents"
-            )
-          }
-        />
+          <QuickAction
+            title="Manage Experience"
+            description="Add professional, technical and research experience."
+            icon={
+              BriefcaseBusiness
+            }
+            onClick={() =>
+              setActiveSection(
+                "Experience"
+              )
+            }
+          />
+
+          <QuickAction
+            title="Manage Documents"
+            description="Upload certificates, reports, publications and other files."
+            icon={Image}
+            onClick={() =>
+              setActiveSection(
+                "Documents"
+              )
+            }
+          />
+
+        </div>
 
       </div>
 
-      {/* ================================= */}
-      {/* INFORMATION */}
-      {/* ================================= */}
+      <div className="mt-8">
+
+        <div className="mb-5">
+
+          <p className="text-sm font-medium text-purple-400">
+            Beyond the Code
+          </p>
+
+          <h3 className="mt-1 text-xl font-semibold">
+            Gallery Management
+          </h3>
+
+          <p className="mt-2 text-sm text-gray-500">
+            Manage the content displayed in your public
+            Beyond the Code section and gallery.
+          </p>
+
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+
+          <QuickAction
+            title="Beyond Settings"
+            description="Manage your Beyond the Code title, introduction and gallery description."
+            icon={Camera}
+            onClick={() =>
+              setActiveSection(
+                "Beyond Settings"
+              )
+            }
+          />
+
+          <QuickAction
+            title="Gallery Categories"
+            description="Create, edit, order and hide gallery categories."
+            icon={Tags}
+            onClick={() =>
+              setActiveSection(
+                "Gallery Categories"
+              )
+            }
+          />
+
+          <QuickAction
+            title="Manage Gallery"
+            description="Upload, edit, publish and feature photos."
+            icon={Images}
+            onClick={() =>
+              setActiveSection(
+                "Gallery"
+              )
+            }
+          />
+
+        </div>
+
+      </div>
 
       <div className="glass-card mt-8 rounded-3xl p-6 sm:p-8">
 
@@ -680,11 +773,6 @@ function DashboardHome({
   );
 }
 
-
-/* ======================================= */
-/* DASHBOARD CARD */
-/* ======================================= */
-
 function DashboardCard({
   title,
   value,
@@ -720,11 +808,6 @@ function DashboardCard({
   );
 }
 
-
-/* ======================================= */
-/* QUICK ACTION */
-/* ======================================= */
-
 function QuickAction({
   title,
   description,
@@ -753,57 +836,6 @@ function QuickAction({
       </p>
 
     </button>
-  );
-}
-
-
-/* ======================================= */
-/* PLACEHOLDER FOR SETTINGS */
-/* ======================================= */
-
-function ComingSoonSection({
-  title,
-  description,
-  icon: Icon,
-}) {
-  return (
-    <>
-
-      <div className="mb-8">
-
-        <p className="text-sm font-medium text-purple-400">
-          Portfolio Content
-        </p>
-
-        <h2 className="mt-2 text-3xl font-bold sm:text-4xl">
-          {title}
-        </h2>
-
-        <p className="mt-3 text-gray-500">
-          {description}
-        </p>
-
-      </div>
-
-      <div className="glass-card flex min-h-[350px] flex-col items-center justify-center rounded-3xl p-8 text-center">
-
-        <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-500/10 text-purple-400">
-
-          <Icon size={30} />
-
-        </div>
-
-        <h3 className="text-xl font-semibold">
-          {title} Manager
-        </h3>
-
-        <p className="mt-3 max-w-md leading-7 text-gray-500">
-          This section will be connected to Supabase in a later development stage.
-        </p>
-
-      </div>
-
-    </>
   );
 }
 
