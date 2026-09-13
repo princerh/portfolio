@@ -14,30 +14,32 @@ import {
   useState,
 } from "react";
 
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
 import { supabase } from "../services/supabase";
 import { useTheme } from "../context/ThemeContext";
 
 const MAX_QUESTION_LENGTH = 1000;
+const MAX_HISTORY_MESSAGES = 10;
 
 const suggestedQuestions = [
-  "What AI projects has he worked on?",
-  "What are his computer vision skills?",
-  "Tell me about Project Orion.",
-  "What research experience does he have?",
+  "What AI projects has Reazul worked on?",
+  "What are his strongest technical skills?",
+  "Tell me about his research experience.",
+  "Which projects involve computer vision?",
 ];
 
 const initialMessage = {
   id: "welcome",
   role: "assistant",
   content:
-    "Hi! I'm the AI assistant for this portfolio. Ask me about projects, AI/ML skills, research, education, or experience.",
+    "Hi! I'm the AI assistant for this portfolio. Ask me about Reazul's projects, AI/ML skills, research, education, or experience.",
 };
 
 function PortfolioAI() {
   const { theme } = useTheme();
-
-  const isDark =
-    theme === "dark";
+  const isDark = theme === "dark";
 
   const [isOpen, setIsOpen] =
     useState(false);
@@ -49,9 +51,7 @@ function PortfolioAI() {
     useState(false);
 
   const [messages, setMessages] =
-    useState([
-      initialMessage,
-    ]);
+    useState([initialMessage]);
 
   const messagesEndRef =
     useRef(null);
@@ -74,21 +74,40 @@ function PortfolioAI() {
   /* ================================= */
 
   useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
+    if (!isOpen) return;
 
-    const timer =
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 200);
+    const timer = setTimeout(() => {
+      inputRef.current?.focus();
+    }, 200);
 
     return () =>
       clearTimeout(timer);
   }, [isOpen]);
 
   /* ================================= */
-  /* SEND QUESTION */
+  /* BUILD CHAT HISTORY */
+  /* ================================= */
+
+  function buildHistory() {
+    return messages
+      .filter(
+        (message) =>
+          message.id !== "welcome" &&
+          !message.error &&
+          (
+            message.role === "user" ||
+            message.role === "assistant"
+          )
+      )
+      .slice(-MAX_HISTORY_MESSAGES)
+      .map((message) => ({
+        role: message.role,
+        content: message.content,
+      }));
+  }
+
+  /* ================================= */
+  /* ASK AI */
   /* ================================= */
 
   async function askAI(
@@ -114,8 +133,7 @@ function PortfolioAI() {
         (current) => [
           ...current,
           {
-            id:
-              crypto.randomUUID(),
+            id: crypto.randomUUID(),
             role: "assistant",
             content:
               "Please keep your question under 1,000 characters.",
@@ -126,6 +144,13 @@ function PortfolioAI() {
 
       return;
     }
+
+    /*
+     * Get previous conversation BEFORE
+     * adding the new user message.
+     */
+    const history =
+      buildHistory();
 
     const userMessage = {
       id: crypto.randomUUID(),
@@ -154,6 +179,9 @@ function PortfolioAI() {
             body: {
               question:
                 cleanQuestion,
+
+              messages:
+                history,
             },
           }
         );
@@ -181,17 +209,15 @@ function PortfolioAI() {
         );
       }
 
-      const assistantMessage = {
-        id: crypto.randomUUID(),
-        role: "assistant",
-        content:
-          data.answer,
-      };
-
       setMessages(
         (current) => [
           ...current,
-          assistantMessage,
+          {
+            id: crypto.randomUUID(),
+            role: "assistant",
+            content:
+              data.answer,
+          },
         ]
       );
     } catch (error) {
@@ -204,8 +230,7 @@ function PortfolioAI() {
         (current) => [
           ...current,
           {
-            id:
-              crypto.randomUUID(),
+            id: crypto.randomUUID(),
             role: "assistant",
             content:
               error.message ||
@@ -220,19 +245,18 @@ function PortfolioAI() {
   }
 
   /* ================================= */
-  /* FORM SUBMIT */
+  /* SUBMIT */
   /* ================================= */
 
   function handleSubmit(
     event
   ) {
     event.preventDefault();
-
     askAI();
   }
 
   /* ================================= */
-  /* RESET CHAT */
+  /* RESET */
   /* ================================= */
 
   function resetChat() {
@@ -241,6 +265,10 @@ function PortfolioAI() {
     ]);
 
     setQuestion("");
+
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
   }
 
   return (
@@ -275,9 +303,7 @@ function PortfolioAI() {
           `}
         >
 
-          {/* ================================= */}
           {/* HEADER */}
-          {/* ================================= */}
 
           <div
             className={`
@@ -315,9 +341,7 @@ function PortfolioAI() {
                   shadow-violet-500/20
                 "
               >
-                <Sparkles
-                  size={20}
-                />
+                <Sparkles size={20} />
               </div>
 
               <div>
@@ -391,7 +415,7 @@ function PortfolioAI() {
           </div>
 
           {/* ================================= */}
-          {/* CHAT MESSAGES */}
+          {/* MESSAGES */}
           {/* ================================= */}
 
           <div
@@ -409,20 +433,14 @@ function PortfolioAI() {
               {messages.map(
                 (message) => (
                   <ChatMessage
-                    key={
-                      message.id
-                    }
-                    message={
-                      message
-                    }
-                    isDark={
-                      isDark
-                    }
+                    key={message.id}
+                    message={message}
+                    isDark={isDark}
                   />
                 )
               )}
 
-              {/* Suggested questions */}
+              {/* Suggestions */}
 
               {messages.length ===
                 1 &&
@@ -476,9 +494,7 @@ function PortfolioAI() {
                               }
                             `}
                           >
-                            {
-                              suggestion
-                            }
+                            {suggestion}
                           </button>
                         )
                       )}
@@ -534,7 +550,7 @@ function PortfolioAI() {
           </div>
 
           {/* ================================= */}
-          {/* INPUT AREA */}
+          {/* INPUT */}
           {/* ================================= */}
 
           <div
@@ -572,15 +588,12 @@ function PortfolioAI() {
 
               <textarea
                 ref={inputRef}
-                value={
-                  question
-                }
+                value={question}
                 onChange={(
                   event
                 ) =>
                   setQuestion(
-                    event.target
-                      .value
+                    event.target.value
                   )
                 }
                 onKeyDown={(
@@ -592,10 +605,7 @@ function PortfolioAI() {
                     !event.shiftKey
                   ) {
                     event.preventDefault();
-
-                    handleSubmit(
-                      event
-                    );
+                    askAI();
                   }
                 }}
                 placeholder="Ask about projects, skills, research..."
@@ -603,9 +613,7 @@ function PortfolioAI() {
                 maxLength={
                   MAX_QUESTION_LENGTH
                 }
-                disabled={
-                  loading
-                }
+                disabled={loading}
                 className={`
                   max-h-28
                   min-h-[42px]
@@ -659,9 +667,7 @@ function PortfolioAI() {
                     className="animate-spin"
                   />
                 ) : (
-                  <Send
-                    size={17}
-                  />
+                  <Send size={17} />
                 )}
               </button>
 
@@ -680,7 +686,7 @@ function PortfolioAI() {
                 `}
               >
                 AI responses are based on
-                portfolio information.
+                live portfolio information.
               </p>
 
               {messages.length >
@@ -850,8 +856,8 @@ function ChatMessage({
 
       <div
         className={`
-          max-w-[82%]
-          whitespace-pre-wrap
+          max-w-[86%]
+          overflow-hidden
           rounded-2xl
           rounded-tl-md
           px-4
@@ -869,10 +875,167 @@ function ChatMessage({
           }
         `}
       >
-        {message.content}
+
+        {message.error ? (
+          message.content
+        ) : (
+          <MarkdownMessage
+            content={
+              message.content
+            }
+            isDark={
+              isDark
+            }
+          />
+        )}
+
       </div>
 
     </div>
+  );
+}
+
+
+/* ================================= */
+/* MARKDOWN RENDERER */
+/* ================================= */
+
+function MarkdownMessage({
+  content,
+  isDark,
+}) {
+  return (
+    <ReactMarkdown
+      remarkPlugins={[
+        remarkGfm,
+      ]}
+      components={{
+        h1: ({ children }) => (
+          <h1 className="mb-2 mt-3 text-lg font-bold first:mt-0">
+            {children}
+          </h1>
+        ),
+
+        h2: ({ children }) => (
+          <h2 className="mb-2 mt-3 text-base font-bold first:mt-0">
+            {children}
+          </h2>
+        ),
+
+        h3: ({ children }) => (
+          <h3 className="mb-2 mt-3 text-sm font-bold first:mt-0">
+            {children}
+          </h3>
+        ),
+
+        p: ({ children }) => (
+          <p className="mb-3 last:mb-0">
+            {children}
+          </p>
+        ),
+
+        strong: ({ children }) => (
+          <strong
+            className={
+              isDark
+                ? "font-semibold text-white"
+                : "font-semibold text-slate-900"
+            }
+          >
+            {children}
+          </strong>
+        ),
+
+        ul: ({ children }) => (
+          <ul className="mb-3 ml-5 list-disc space-y-1 last:mb-0">
+            {children}
+          </ul>
+        ),
+
+        ol: ({ children }) => (
+          <ol className="mb-3 ml-5 list-decimal space-y-1 last:mb-0">
+            {children}
+          </ol>
+        ),
+
+        li: ({ children }) => (
+          <li className="pl-1">
+            {children}
+          </li>
+        ),
+
+        a: ({
+          href,
+          children,
+        }) => (
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={
+              isDark
+                ? "font-medium text-violet-400 underline decoration-violet-400/40 underline-offset-2 hover:text-violet-300"
+                : "font-medium text-violet-700 underline decoration-violet-400/40 underline-offset-2 hover:text-violet-600"
+            }
+          >
+            {children}
+          </a>
+        ),
+
+        blockquote: ({
+          children,
+        }) => (
+          <blockquote
+            className={`
+              my-3
+              border-l-2
+              pl-3
+              italic
+              ${
+                isDark
+                  ? "border-violet-500 text-gray-400"
+                  : "border-violet-400 text-slate-600"
+              }
+            `}
+          >
+            {children}
+          </blockquote>
+        ),
+
+        code: ({
+          children,
+        }) => (
+          <code
+            className={`
+              rounded
+              px-1.5
+              py-0.5
+              font-mono
+              text-xs
+              ${
+                isDark
+                  ? "bg-black/30 text-violet-300"
+                  : "bg-slate-200 text-violet-800"
+              }
+            `}
+          >
+            {children}
+          </code>
+        ),
+
+        hr: () => (
+          <hr
+            className={
+              isDark
+                ? "my-4 border-white/10"
+                : "my-4 border-slate-200"
+            }
+          />
+        ),
+      }}
+    >
+      {content}
+    </ReactMarkdown>
   );
 }
 
