@@ -1,4 +1,5 @@
 import {
+  BarChart3,
   BriefcaseBusiness,
   Camera,
   FileText,
@@ -33,6 +34,7 @@ import BeyondSettingsManager from "./BeyondSettingsManager";
 import GalleryCategoryManager from "./GalleryCategoryManager";
 import GalleryManager from "./GalleryManager";
 import MessageManager from "./MessageManager";
+import AIAnalyticsManager from "./AIAnalyticsManager";
 import SettingsManager from "./SettingsManager";
 
 function AdminDashboard() {
@@ -46,14 +48,16 @@ function AdminDashboard() {
   const [
     activeSection,
     setActiveSection,
-  ] = useState(
-    "Dashboard"
-  );
+  ] = useState("Dashboard");
 
   const [
     mobileSidebarOpen,
     setMobileSidebarOpen,
   ] = useState(false);
+
+  /* ======================================= */
+  /* MENU ITEMS */
+  /* ======================================= */
 
   const menuItems = [
     {
@@ -105,17 +109,23 @@ function AdminDashboard() {
       icon: Mail,
     },
     {
+      name: "AI Analytics",
+      icon: BarChart3,
+    },
+    {
       name: "Settings",
       icon: Settings,
     },
   ];
 
+  /* ======================================= */
+  /* CHANGE SECTION */
+  /* ======================================= */
+
   function handleSectionChange(
     section
   ) {
-    setActiveSection(
-      section
-    );
+    setActiveSection(section);
 
     setMobileSidebarOpen(
       false
@@ -126,6 +136,10 @@ function AdminDashboard() {
       behavior: "smooth",
     });
   }
+
+  /* ======================================= */
+  /* LOGOUT */
+  /* ======================================= */
 
   async function handleLogout() {
     setMobileSidebarOpen(
@@ -155,12 +169,13 @@ function AdminDashboard() {
   return (
     <div className="min-h-screen bg-[#050816] text-white">
 
-      {/* Mobile Header */}
+      {/* ================================= */}
+      {/* MOBILE HEADER */}
+      {/* ================================= */}
 
       <header className="sticky top-0 z-30 flex h-[72px] items-center justify-between border-b border-white/10 bg-[#090c1b]/95 px-5 backdrop-blur-xl lg:hidden">
 
         <div>
-
           <h1 className="gradient-text text-xl font-bold">
             Prince.
           </h1>
@@ -168,7 +183,6 @@ function AdminDashboard() {
           <p className="mt-0.5 text-[11px] text-gray-500">
             Portfolio Admin
           </p>
-
         </div>
 
         <button
@@ -189,7 +203,9 @@ function AdminDashboard() {
 
       </header>
 
-      {/* Mobile Overlay */}
+      {/* ================================= */}
+      {/* MOBILE OVERLAY */}
+      {/* ================================= */}
 
       <div
         onClick={() =>
@@ -204,7 +220,9 @@ function AdminDashboard() {
         }`}
       />
 
-      {/* Mobile Sidebar */}
+      {/* ================================= */}
+      {/* MOBILE SIDEBAR */}
+      {/* ================================= */}
 
       <aside
         className={`fixed bottom-0 left-0 top-0 z-50 flex w-[280px] max-w-[85vw] flex-col border-r border-white/10 bg-[#090c1b] p-6 shadow-2xl transition-transform duration-300 ease-out lg:hidden ${
@@ -217,7 +235,6 @@ function AdminDashboard() {
         <div className="mb-8 flex items-start justify-between gap-4">
 
           <div>
-
             <h1 className="gradient-text text-2xl font-bold">
               Prince.
             </h1>
@@ -225,7 +242,6 @@ function AdminDashboard() {
             <p className="mt-1 text-xs text-gray-500">
               Portfolio Admin
             </p>
-
           </div>
 
           <button
@@ -313,9 +329,15 @@ function AdminDashboard() {
 
       </aside>
 
+      {/* ================================= */}
+      {/* PAGE */}
+      {/* ================================= */}
+
       <div className="flex min-h-[calc(100vh-72px)] lg:min-h-screen">
 
-        {/* Desktop Sidebar */}
+        {/* ================================= */}
+        {/* DESKTOP SIDEBAR */}
+        {/* ================================= */}
 
         <aside className="hidden w-64 shrink-0 border-r border-white/10 bg-[#090c1b] p-6 lg:flex lg:min-h-screen lg:flex-col">
 
@@ -340,7 +362,7 @@ function AdminDashboard() {
 
                 const isActive =
                   activeSection ===
-                    item.name;
+                  item.name;
 
                 return (
                   <button
@@ -402,11 +424,15 @@ function AdminDashboard() {
 
         </aside>
 
-        {/* Main Content */}
+        {/* ================================= */}
+        {/* MAIN CONTENT */}
+        {/* ================================= */}
 
         <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-10">
 
           <div className="mx-auto max-w-7xl">
+
+            {/* Dashboard */}
 
             {activeSection ===
               "Dashboard" && (
@@ -418,60 +444,91 @@ function AdminDashboard() {
               />
             )}
 
+            {/* Profile */}
+
             {activeSection ===
               "Profile" && (
               <ProfileManager />
             )}
+
+            {/* Resume */}
 
             {activeSection ===
               "Resume" && (
               <ResumeManager />
             )}
 
+            {/* Projects */}
+
             {activeSection ===
               "Projects" && (
               <ProjectManager />
             )}
+
+            {/* Skills */}
 
             {activeSection ===
               "Skills" && (
               <SkillManager />
             )}
 
+            {/* Education */}
+
             {activeSection ===
               "Education" && (
               <EducationManager />
             )}
+
+            {/* Experience */}
 
             {activeSection ===
               "Experience" && (
               <ExperienceManager />
             )}
 
+            {/* Documents */}
+
             {activeSection ===
               "Documents" && (
               <DocumentManager />
             )}
+
+            {/* Beyond Settings */}
 
             {activeSection ===
               "Beyond Settings" && (
               <BeyondSettingsManager />
             )}
 
+            {/* Gallery Categories */}
+
             {activeSection ===
               "Gallery Categories" && (
               <GalleryCategoryManager />
             )}
+
+            {/* Gallery */}
 
             {activeSection ===
               "Gallery" && (
               <GalleryManager />
             )}
 
+            {/* Messages */}
+
             {activeSection ===
               "Messages" && (
               <MessageManager />
             )}
+
+            {/* AI Analytics */}
+
+            {activeSection ===
+              "AI Analytics" && (
+              <AIAnalyticsManager />
+            )}
+
+            {/* Settings */}
 
             {activeSection ===
               "Settings" && (
@@ -488,12 +545,20 @@ function AdminDashboard() {
   );
 }
 
+/* ======================================= */
+/* DASHBOARD HOME */
+/* ======================================= */
+
 function DashboardHome({
   user,
   setActiveSection,
 }) {
   return (
     <>
+
+      {/* ================================= */}
+      {/* HEADER */}
+      {/* ================================= */}
 
       <div className="mb-10">
 
@@ -522,6 +587,10 @@ function DashboardHome({
         )}
 
       </div>
+
+      {/* ================================= */}
+      {/* MAIN MANAGEMENT CARDS */}
+      {/* ================================= */}
 
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
 
@@ -559,13 +628,17 @@ function DashboardHome({
 
       </div>
 
+      {/* ================================= */}
+      {/* QUICK ACTIONS */}
+      {/* ================================= */}
+
       <div className="mt-8">
 
         <h3 className="mb-5 text-xl font-semibold">
           Quick Actions
         </h3>
 
-        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-5">
 
           <QuickAction
             title="Edit Profile"
@@ -613,9 +686,24 @@ function DashboardHome({
             }
           />
 
+          <QuickAction
+            title="AI Analytics"
+            description="Monitor Ask AI and Recruiter Match usage."
+            icon={BarChart3}
+            onClick={() =>
+              setActiveSection(
+                "AI Analytics"
+              )
+            }
+          />
+
         </div>
 
       </div>
+
+      {/* ================================= */}
+      {/* CONTENT MANAGEMENT */}
+      {/* ================================= */}
 
       <div className="mt-8">
 
@@ -677,6 +765,10 @@ function DashboardHome({
 
       </div>
 
+      {/* ================================= */}
+      {/* GALLERY MANAGEMENT */}
+      {/* ================================= */}
+
       <div className="mt-8">
 
         <div className="mb-5">
@@ -735,6 +827,10 @@ function DashboardHome({
 
       </div>
 
+      {/* ================================= */}
+      {/* INFORMATION */}
+      {/* ================================= */}
+
       <div className="glass-card mt-8 rounded-3xl p-6 sm:p-8">
 
         <div className="flex items-start gap-4">
@@ -759,8 +855,9 @@ function DashboardHome({
               Changes saved through the dashboard are stored
               in Supabase and displayed dynamically on the
               website. Messages submitted from your contact
-              form are also available directly from this
-              dashboard.
+              form are available here, while AI Analytics
+              provides anonymous usage information for your
+              Ask AI and Recruiter Match features.
             </p>
 
           </div>
@@ -772,6 +869,10 @@ function DashboardHome({
     </>
   );
 }
+
+/* ======================================= */
+/* DASHBOARD CARD */
+/* ======================================= */
 
 function DashboardCard({
   title,
@@ -807,6 +908,10 @@ function DashboardCard({
     </div>
   );
 }
+
+/* ======================================= */
+/* QUICK ACTION */
+/* ======================================= */
 
 function QuickAction({
   title,
