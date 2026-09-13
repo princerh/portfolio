@@ -1,0 +1,5 @@
+[functions.send-contact-email]
+verify_jwt = false
+
+[functions.ask-portfolio-ai]
+verify_jwt = false

@@ -7,7 +7,6 @@ import {
 
 import {
   useEffect,
-  useMemo,
   useState,
 } from "react";
 
@@ -95,23 +94,6 @@ function BeyondTheCode() {
       setLoading(false);
     }
   }
-
-  const layoutMode =
-    useMemo(() => {
-      if (photos.length === 1) {
-        return "single";
-      }
-
-      if (photos.length === 2) {
-        return "double";
-      }
-
-      if (photos.length === 3) {
-        return "triple";
-      }
-
-      return "grid";
-    }, [photos.length]);
 
   if (loading) {
     return (
@@ -257,123 +239,29 @@ function BeyondTheCode() {
         )}
 
         {/* ================================= */}
-        {/* FEATURED PHOTO LAYOUT */}
+        {/* FEATURED PHOTOS */}
         {/* ================================= */}
 
         {photos.length > 0 && (
-          <>
-            {layoutMode ===
-              "single" && (
-              <div className="grid grid-cols-1">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
 
+            {photos.map(
+              (photo) => (
                 <GalleryPreviewCard
-                  photo={
-                    photos[0]
+                  key={
+                    photo.id
                   }
-                  variant="hero"
+                  photo={
+                    photo
+                  }
                   isDark={
                     isDark
                   }
                 />
-
-              </div>
+              )
             )}
 
-            {layoutMode ===
-              "double" && (
-              <div className="grid gap-5 md:grid-cols-2">
-
-                {photos.map(
-                  (photo) => (
-                    <GalleryPreviewCard
-                      key={
-                        photo.id
-                      }
-                      photo={
-                        photo
-                      }
-                      variant="large"
-                      isDark={
-                        isDark
-                      }
-                    />
-                  )
-                )}
-
-              </div>
-            )}
-
-            {layoutMode ===
-              "triple" && (
-              <div className="grid gap-5 lg:grid-cols-2">
-
-                <GalleryPreviewCard
-                  photo={
-                    photos[0]
-                  }
-                  variant="hero"
-                  isDark={
-                    isDark
-                  }
-                />
-
-                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
-
-                  {photos
-                    .slice(1)
-                    .map(
-                      (photo) => (
-                        <GalleryPreviewCard
-                          key={
-                            photo.id
-                          }
-                          photo={
-                            photo
-                          }
-                          variant="small"
-                          isDark={
-                            isDark
-                          }
-                        />
-                      )
-                    )}
-
-                </div>
-
-              </div>
-            )}
-
-            {layoutMode ===
-              "grid" && (
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-
-                {photos.map(
-                  (
-                    photo,
-                    index
-                  ) => (
-                    <GalleryPreviewCard
-                      key={
-                        photo.id
-                      }
-                      photo={
-                        photo
-                      }
-                      variant={
-                        index === 0
-                          ? "featured"
-                          : "small"
-                      }
-                      isDark={
-                        isDark
-                      }
-                    />
-                  )
-                )}
-
-              </div>
-            )}
-          </>
+          </div>
         )}
 
         {/* ================================= */}
@@ -411,48 +299,23 @@ function BeyondTheCode() {
 
 function GalleryPreviewCard({
   photo,
-  variant = "small",
   isDark,
 }) {
-  const sizeClasses =
-    {
-      hero:
-        "h-[420px] sm:h-[500px] lg:h-[560px]",
-
-      large:
-        "h-[340px] sm:h-[380px]",
-
-      featured:
-        "h-[420px] sm:col-span-2 lg:col-span-2 lg:row-span-2 lg:h-full lg:min-h-[520px]",
-
-      small:
-        "h-[250px] sm:h-[270px]",
-    };
-
-  const titleClasses =
-    variant === "hero" ||
-    variant === "featured"
-      ? "text-2xl sm:text-3xl"
-      : "text-lg sm:text-xl";
-
   return (
     <Link
       to="/gallery"
-      className={`group relative overflow-hidden rounded-3xl border shadow-sm transition duration-300 ${
+      className={`group relative block overflow-hidden rounded-3xl border shadow-sm transition duration-300 ${
         isDark
           ? "border-white/10 bg-white/[0.03]"
           : "border-slate-200 bg-white shadow-slate-200/70"
       }`}
     >
 
-      <div
-        className={`relative overflow-hidden ${
-          sizeClasses[
-            variant
-          ] ||
-          sizeClasses.small
-        }`}
-      >
+      {/* ================================= */}
+      {/* IMAGE */}
+      {/* ================================= */}
+
+      <div className="relative aspect-[4/3] overflow-hidden">
 
         <img
           src={
@@ -465,7 +328,13 @@ function GalleryPreviewCard({
           className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+        {/* Dark overlay */}
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
+
+        {/* ================================= */}
+        {/* PHOTO DETAILS */}
+        {/* ================================= */}
 
         <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
 
@@ -477,23 +346,21 @@ function GalleryPreviewCard({
             </span>
           )}
 
-          <h3
-            className={`mt-3 font-semibold text-white ${titleClasses}`}
-          >
+          <h3 className="mt-3 line-clamp-2 text-lg font-semibold leading-snug text-white sm:text-xl">
             {
               photo.title
             }
           </h3>
 
           {photo.location && (
-            <div className="mt-2 flex items-center gap-2 text-sm text-gray-200">
+            <div className="mt-2 flex items-start gap-2 text-sm text-gray-200">
 
               <MapPin
                 size={15}
-                className="shrink-0 text-purple-300"
+                className="mt-0.5 shrink-0 text-purple-300"
               />
 
-              <span>
+              <span className="line-clamp-2">
                 {
                   photo.location
                 }
@@ -501,18 +368,6 @@ function GalleryPreviewCard({
 
             </div>
           )}
-
-          {(variant ===
-            "hero" ||
-            variant ===
-              "featured") &&
-            photo.caption && (
-              <p className="mt-3 line-clamp-2 max-w-2xl text-sm leading-6 text-gray-200">
-                {
-                  photo.caption
-                }
-              </p>
-            )}
 
         </div>
 

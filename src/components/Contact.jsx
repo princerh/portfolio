@@ -273,7 +273,14 @@ function Contact() {
     setSending(true);
 
     try {
-      const { error } =
+      /*
+       * =================================
+       * STEP 1:
+       * SAVE MESSAGE TO SUPABASE
+       * =================================
+       */
+
+      const { error: databaseError } =
         await supabase
           .from(
             "contact_messages"
@@ -293,8 +300,62 @@ function Contact() {
               cleanMessage,
           });
 
-      if (error) {
-        throw error;
+      if (databaseError) {
+        throw databaseError;
+      }
+
+      /*
+       * =================================
+       * STEP 2:
+       * SEND EMAIL NOTIFICATION
+       * =================================
+       */
+
+      const {
+        data: emailData,
+        error: emailError,
+      } =
+        await supabase.functions.invoke(
+          "send-contact-email",
+          {
+            body: {
+              name:
+                cleanName,
+
+              email:
+                cleanEmail,
+
+              subject:
+                cleanSubject,
+
+              message:
+                cleanMessage,
+            },
+          }
+        );
+
+      if (emailError) {
+        console.error(
+          "Email function error:",
+          emailError
+        );
+
+        throw new Error(
+          "Your message was saved, but the email notification could not be sent."
+        );
+      }
+
+      if (
+        emailData?.error
+      ) {
+        console.error(
+          "Email service error:",
+          emailData.error
+        );
+
+        throw new Error(
+          emailData.error
+        );
       }
 
       /*
@@ -305,6 +366,10 @@ function Contact() {
         "portfolio-contact-last-submit",
         String(Date.now())
       );
+
+      /*
+       * Success message.
+       */
 
       setSuccessMessage(
         "Your message has been sent successfully."

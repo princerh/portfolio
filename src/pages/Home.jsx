@@ -8,6 +8,7 @@ import Documents from "../components/Documents";
 import BeyondTheCode from "../components/BeyondTheCode";
 import Contact from "../components/Contact";
 import Footer from "../components/Footer";
+import PortfolioAI from "../components/PortfolioAI";
 
 function Home() {
   return (
@@ -21,14 +22,13 @@ function Home() {
         <Education />
         <Experience />
         <Documents />
-
-        {/* Public personal gallery preview */}
         <BeyondTheCode />
-
         <Contact />
       </main>
 
       <Footer />
+
+      <PortfolioAI />
     </div>
   );
 }
