@@ -1,15 +1,28 @@
+
 import {
+  ExternalLink,
+  FileText,
   GraduationCap,
   Loader2,
   Pencil,
   Plus,
   Save,
   Trash2,
+  Upload,
   X,
 } from "lucide-react";
 
 import { useEffect, useState } from "react";
 import { supabase } from "../services/supabase";
+
+const BUCKET = "transcripts";
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+const ALLOWED_TYPES = [
+  "application/pdf",
+  "image/png",
+  "image/jpeg",
+];
 
 const EMPTY_FORM = {
   institution: "",
@@ -19,19 +32,59 @@ const EMPTY_FORM = {
   passingYear: "",
   description: "",
   resultScore: "",
+  transcriptPath: "",
 };
+
+function getTranscriptUrl(path) {
+  if (!path) return null;
+
+  if (path.startsWith("https://")) {
+    return path;
+  }
+
+  const { data } = supabase.storage
+    .from(BUCKET)
+    .getPublicUrl(path);
+
+  return data?.publicUrl || null;
+}
+
+function validateFile(file) {
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    throw new Error(
+      "Only PDF, PNG, JPG and JPEG transcripts are allowed."
+    );
+  }
+
+  if (file.size > MAX_FILE_SIZE) {
+    throw new Error(
+      "Transcript must be 10 MB or smaller."
+    );
+  }
+}
 
 function EducationManager() {
   const [education, setEducation] = useState([]);
-  const [form, setForm] = useState(EMPTY_FORM);
+  const [form, setForm] = useState({ ...EMPTY_FORM });
   const [editingId, setEditingId] = useState(null);
+
+  const [transcriptFile, setTranscriptFile] =
+    useState(null);
+
+  const [removeTranscript, setRemoveTranscript] =
+    useState(false);
+
+  const [fileInputKey, setFileInputKey] =
+    useState(0);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [deletingId, setDeletingId] = useState(null);
+  const [deletingId, setDeletingId] =
+    useState(null);
 
   const [message, setMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] =
+    useState("");
 
   useEffect(() => {
     loadEducation();
@@ -49,9 +102,7 @@ function EducationManager() {
           ascending: true,
         });
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
       setEducation(data || []);
     } catch (error) {
@@ -76,19 +127,93 @@ function EducationManager() {
     }));
   }
 
+  function clearSelectedFile() {
+    setTranscriptFile(null);
+    setFileInputKey((key) => key + 1);
+  }
+
   function resetForm() {
     setEditingId(null);
-    setForm(EMPTY_FORM);
+    setForm({ ...EMPTY_FORM });
+    setTranscriptFile(null);
+    setRemoveTranscript(false);
+    setFileInputKey((key) => key + 1);
     setMessage("");
     setErrorMessage("");
+  }
+
+  function handleFileChange(event) {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    try {
+      validateFile(file);
+      setTranscriptFile(file);
+      setRemoveTranscript(false);
+      setErrorMessage("");
+    } catch (error) {
+      clearSelectedFile();
+      setErrorMessage(error.message);
+    }
+  }
+
+  async function uploadTranscript(file) {
+    validateFile(file);
+
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      throw new Error(
+        "Please sign in as an administrator."
+      );
+    }
+
+    const extension =
+      file.name.split(".").pop()?.toLowerCase() ||
+      "pdf";
+
+    const filePath =
+      `${user.id}/education/` +
+      `${crypto.randomUUID()}.${extension}`;
+
+    const { error } = await supabase.storage
+      .from(BUCKET)
+      .upload(filePath, file, {
+        contentType: file.type,
+        upsert: false,
+      });
+
+    if (error) throw error;
+
+    return filePath;
+  }
+
+  async function deleteTranscriptFile(path) {
+    if (!path || path.startsWith("https://")) {
+      return;
+    }
+
+    const { error } = await supabase.storage
+      .from(BUCKET)
+      .remove([path]);
+
+    if (error) throw error;
   }
 
   async function handleSave(event) {
     event.preventDefault();
 
+    if (saving) return;
+
     setSaving(true);
     setMessage("");
     setErrorMessage("");
+
+    let uploadedPath = null;
 
     try {
       if (!form.institution.trim()) {
@@ -101,6 +226,19 @@ function EducationManager() {
         throw new Error(
           "Degree is required."
         );
+      }
+
+      const oldPath =
+        form.transcriptPath || null;
+
+      let newPath =
+        removeTranscript ? null : oldPath;
+
+      if (transcriptFile) {
+        uploadedPath =
+          await uploadTranscript(transcriptFile);
+
+        newPath = uploadedPath;
       }
 
       const educationData = {
@@ -124,6 +262,8 @@ function EducationManager() {
 
         result_score:
           form.resultScore.trim(),
+
+        transcript_path: newPath,
       };
 
       let result;
@@ -147,21 +287,58 @@ function EducationManager() {
         throw result.error;
       }
 
-      setMessage(
-        editingId
-          ? "Education updated successfully."
-          : "Education added successfully."
-      );
+      // Remove the previous file only after
+      // the database update succeeds.
+      let cleanupWarning = "";
 
-      setEditingId(null);
-      setForm(EMPTY_FORM);
+      if (
+        oldPath &&
+        oldPath !== newPath
+      ) {
+        try {
+          await deleteTranscriptFile(oldPath);
+        } catch (cleanupError) {
+          console.error(
+            "Old transcript cleanup failed:",
+            cleanupError
+          );
+
+          cleanupWarning =
+            " The previous transcript file could not be removed from storage.";
+        }
+      }
+
+      const successMessage = editingId
+        ? "Education updated successfully."
+        : "Education added successfully.";
+
+      resetForm();
 
       await loadEducation();
+
+      setMessage(
+        successMessage + cleanupWarning
+      );
     } catch (error) {
       console.error(
         "Education save error:",
         error
       );
+
+      // If a new file was uploaded but the
+      // database save failed, remove it.
+      if (uploadedPath) {
+        try {
+          await deleteTranscriptFile(
+            uploadedPath
+          );
+        } catch (cleanupError) {
+          console.error(
+            "Uploaded file cleanup failed:",
+            cleanupError
+          );
+        }
+      }
 
       setErrorMessage(
         error.message ||
@@ -196,8 +373,13 @@ function EducationManager() {
 
       resultScore:
         item.result_score ?? "",
+
+      transcriptPath:
+        item.transcript_path ?? "",
     });
 
+    clearSelectedFile();
+    setRemoveTranscript(false);
     setMessage("");
     setErrorMessage("");
 
@@ -208,14 +390,11 @@ function EducationManager() {
   }
 
   async function handleDelete(item) {
-    const confirmed =
-      window.confirm(
-        `Delete "${item.degree}" from "${item.institution}"?`
-      );
+    const confirmed = window.confirm(
+      `Delete "${item.degree}" from "${item.institution}"?`
+    );
 
-    if (!confirmed) {
-      return;
-    }
+    if (!confirmed) return;
 
     setDeletingId(item.id);
     setMessage("");
@@ -227,19 +406,36 @@ function EducationManager() {
         .delete()
         .eq("id", item.id);
 
-      if (error) {
-        throw error;
+      if (error) throw error;
+
+      let cleanupWarning = "";
+
+      if (item.transcript_path) {
+        try {
+          await deleteTranscriptFile(
+            item.transcript_path
+          );
+        } catch (cleanupError) {
+          console.error(
+            "Transcript cleanup failed:",
+            cleanupError
+          );
+
+          cleanupWarning =
+            " The transcript file could not be removed from storage.";
+        }
       }
 
       if (editingId === item.id) {
         resetForm();
       }
 
-      setMessage(
-        "Education deleted successfully."
-      );
-
       await loadEducation();
+
+      setMessage(
+        "Education deleted successfully." +
+          cleanupWarning
+      );
     } catch (error) {
       console.error(
         "Education delete error:",
@@ -272,6 +468,13 @@ function EducationManager() {
     );
   }
 
+  const existingTranscriptUrl =
+    !removeTranscript
+      ? getTranscriptUrl(
+          form.transcriptPath
+        )
+      : null;
+
   return (
     <div>
       {/* Header */}
@@ -286,8 +489,8 @@ function EducationManager() {
         </h2>
 
         <p className="mt-3 text-gray-500">
-          Manage your academic background
-          and qualifications.
+          Manage your academic background,
+          qualifications and transcripts.
         </p>
       </div>
 
@@ -321,7 +524,7 @@ function EducationManager() {
 
             <p className="mt-2 text-sm text-gray-500">
               Add your university, degree,
-              result and other academic details.
+              result and academic details.
             </p>
           </div>
 
@@ -329,7 +532,8 @@ function EducationManager() {
             <button
               type="button"
               onClick={resetForm}
-              className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-gray-300 transition hover:bg-white/10"
+              disabled={saving}
+              className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-gray-300 transition hover:bg-white/10 disabled:opacity-50"
             >
               <X size={17} />
               Cancel Edit
@@ -413,6 +617,8 @@ function EducationManager() {
           />
         </div>
 
+        {/* Description */}
+
         <div className="mt-6">
           <label className="mb-2 block text-sm text-gray-300">
             Description
@@ -431,6 +637,133 @@ function EducationManager() {
             className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-gray-600 focus:border-purple-500/60"
           />
         </div>
+
+        {/* Transcript Upload */}
+
+        <div className="mt-8 rounded-2xl border border-purple-500/20 bg-purple-500/5 p-5 sm:p-6">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-purple-500/20 bg-purple-500/10 text-purple-300">
+              <FileText size={21} />
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-white">
+                Academic Transcript
+              </h4>
+
+              <p className="mt-1 text-xs text-gray-400">
+                PDF, PNG or JPEG. Maximum 10 MB.
+              </p>
+            </div>
+          </div>
+
+          {/* Existing transcript */}
+
+          {existingTranscriptUrl && (
+            <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
+              <div className="flex items-center gap-2 text-sm text-gray-300">
+                <FileText
+                  size={18}
+                  className="text-purple-400"
+                />
+                Current transcript available
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                <a
+                  href={existingTranscriptUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-lg border border-purple-500/20 bg-purple-500/10 px-3 py-2 text-sm text-purple-300 transition hover:bg-purple-500/20"
+                >
+                  <ExternalLink size={15} />
+                  View
+                </a>
+
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={() => {
+                    setRemoveTranscript(true);
+                    clearSelectedFile();
+                  }}
+                  className="inline-flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-300 transition hover:bg-red-500/20 disabled:opacity-50"
+                >
+                  <Trash2 size={15} />
+                  Remove
+                </button>
+              </div>
+            </div>
+          )}
+
+          {removeTranscript && (
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-500/20 bg-amber-500/10 p-4">
+              <p className="text-sm text-amber-200">
+                Transcript will be removed when
+                you save this education entry.
+              </p>
+
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() =>
+                  setRemoveTranscript(false)
+                }
+                className="text-sm font-medium text-amber-100 underline disabled:opacity-50"
+              >
+                Undo
+              </button>
+            </div>
+          )}
+
+          {/* File input */}
+
+          <div className="mt-5">
+            <label className="mb-3 block text-sm font-medium text-gray-300">
+              {form.transcriptPath
+                ? "Replace Transcript"
+                : "Upload Transcript"}
+            </label>
+
+            <input
+              key={fileInputKey}
+              type="file"
+              accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg"
+              onChange={handleFileChange}
+              disabled={saving}
+              className="block w-full cursor-pointer rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-gray-300 file:mr-4 file:rounded-lg file:border-0 file:bg-purple-500/20 file:px-4 file:py-2 file:font-semibold file:text-purple-200 hover:file:bg-purple-500/30 disabled:opacity-50"
+            />
+
+            {transcriptFile && (
+              <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-green-500/20 bg-green-500/10 px-4 py-3">
+                <div className="flex items-center gap-2 text-sm text-green-200">
+                  <Upload size={16} />
+                  <span className="break-all">
+                    {transcriptFile.name}
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={clearSelectedFile}
+                  disabled={saving}
+                  className="text-sm text-green-100 underline disabled:opacity-50"
+                >
+                  Clear
+                </button>
+              </div>
+            )}
+
+            <p className="mt-3 text-xs leading-6 text-gray-500">
+              Upload a redacted transcript only.
+              Public visitors will be able to
+              view this file from your Education
+              section.
+            </p>
+          </div>
+        </div>
+
+        {/* Save */}
 
         <div className="mt-8">
           <button
@@ -461,7 +794,7 @@ function EducationManager() {
         </div>
       </form>
 
-      {/* Existing education */}
+      {/* Existing Education */}
 
       <div>
         <div className="mb-5">
@@ -518,10 +851,13 @@ function EducationCard({
   onDelete,
   deleting,
 }) {
+  const transcriptUrl =
+    getTranscriptUrl(item.transcript_path);
+
   return (
     <div className="glass-card rounded-2xl p-6">
       <div className="flex flex-wrap items-start justify-between gap-5">
-        <div>
+        <div className="min-w-0 flex-1">
           <h4 className="text-lg font-semibold">
             {item.degree}
           </h4>
@@ -562,13 +898,36 @@ function EducationCard({
               {item.description}
             </p>
           )}
+
+          {/* Transcript status */}
+
+          <div className="mt-5">
+            {transcriptUrl ? (
+              <a
+                href={transcriptUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl border border-green-500/20 bg-green-500/10 px-4 py-2 text-sm text-green-300 transition hover:bg-green-500/20"
+              >
+                <FileText size={16} />
+                View Transcript
+                <ExternalLink size={14} />
+              </a>
+            ) : (
+              <span className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs text-gray-500">
+                <FileText size={15} />
+                No transcript uploaded
+              </span>
+            )}
+          </div>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <button
             type="button"
             onClick={onEdit}
-            className="flex items-center gap-2 rounded-xl border border-purple-500/20 bg-purple-500/10 px-4 py-2 text-sm text-purple-300 transition hover:bg-purple-500/20"
+            disabled={deleting}
+            className="flex items-center gap-2 rounded-xl border border-purple-500/20 bg-purple-500/10 px-4 py-2 text-sm text-purple-300 transition hover:bg-purple-500/20 disabled:opacity-50"
           >
             <Pencil size={16} />
             Edit
@@ -620,9 +979,7 @@ function InputField({
         type="text"
         value={value}
         onChange={(event) =>
-          onChange(
-            event.target.value
-          )
+          onChange(event.target.value)
         }
         placeholder={placeholder}
         required={required}

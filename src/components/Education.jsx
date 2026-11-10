@@ -1,5 +1,8 @@
+
 import {
   Award,
+  ExternalLink,
+  FileText,
   GraduationCap,
   Loader2,
   MapPin,
@@ -11,10 +14,113 @@ import {
 } from "react";
 
 import { supabase } from "../services/supabase";
+import { useTheme } from "../context/ThemeContext";
 
-import {
-  useTheme,
-} from "../context/ThemeContext";
+/* ================================= */
+/* TRANSCRIPT URL HELPER */
+/* ================================= */
+
+function getTranscriptUrl(transcriptPath) {
+  if (
+    !transcriptPath ||
+    typeof transcriptPath !== "string"
+  ) {
+    return null;
+  }
+
+  const path = transcriptPath.trim();
+
+  if (!path) {
+    return null;
+  }
+
+  // Support existing full Supabase Storage URLs.
+  // Only allow HTTPS URLs.
+  if (path.startsWith("https://")) {
+    return path;
+  }
+
+  // Normal case: transcript_path stores the
+  // file path inside the transcripts bucket.
+  const { data } = supabase.storage
+    .from("transcripts")
+    .getPublicUrl(path);
+
+  return data?.publicUrl || null;
+}
+
+/* ================================= */
+/* VIEW TRANSCRIPT BUTTON */
+/* ================================= */
+
+function TranscriptButton({
+  transcriptPath,
+  isDark,
+}) {
+  const transcriptUrl =
+    getTranscriptUrl(transcriptPath);
+
+  if (!transcriptUrl) {
+    return null;
+  }
+
+  return (
+    <div className="mt-6">
+      <a
+        href={transcriptUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="View academic transcript in a new tab"
+        className={`
+          inline-flex items-center justify-center
+          gap-2.5 rounded-xl border
+          px-5 py-3 text-sm font-semibold
+          transition-all duration-300
+          hover:-translate-y-0.5
+          focus-visible:outline-none
+          focus-visible:ring-2
+          focus-visible:ring-violet-500
+          focus-visible:ring-offset-2
+          ${
+            isDark
+              ? `
+                border-purple-500/30
+                bg-purple-500/10
+                text-purple-300
+                hover:border-purple-400/60
+                hover:bg-purple-500/20
+                hover:text-white
+                focus-visible:ring-offset-[#050816]
+              `
+              : `
+                border-violet-200
+                bg-violet-50
+                text-violet-700
+                hover:border-violet-400
+                hover:bg-violet-100
+                hover:shadow-md
+                hover:shadow-violet-500/10
+                focus-visible:ring-offset-white
+              `
+          }
+        `}
+      >
+        <FileText size={18} />
+
+        <span>View Transcript</span>
+
+        <ExternalLink
+          size={15}
+          className="opacity-70"
+        />
+      </a>
+    </div>
+  );
+}
+
+/* ================================= */
+/* MAIN EDUCATION COMPONENT */
+/* ================================= */
 
 function Education() {
   const [education, setEducation] =
@@ -26,12 +132,9 @@ function Education() {
   const [errorMessage, setErrorMessage] =
     useState("");
 
-  const {
-    theme,
-  } = useTheme();
+  const { theme } = useTheme();
 
-  const isDark =
-    theme === "dark";
+  const isDark = theme === "dark";
 
   useEffect(() => {
     loadEducation();
@@ -54,9 +157,7 @@ function Education() {
         throw error;
       }
 
-      setEducation(
-        data || []
-      );
+      setEducation(data || []);
     } catch (error) {
       console.error(
         "Education loading error:",
@@ -87,7 +188,6 @@ function Education() {
         }`}
       >
         <div className="flex min-h-[300px] items-center justify-center">
-
           <Loader2
             size={34}
             className={`animate-spin ${
@@ -96,7 +196,6 @@ function Education() {
                 : "text-violet-600"
             }`}
           />
-
         </div>
       </section>
     );
@@ -112,7 +211,6 @@ function Education() {
         id="education"
         className="relative overflow-hidden px-6 py-24 lg:px-8"
       >
-
         <div className="pointer-events-none absolute left-[-100px] top-[30%] h-[350px] w-[350px] rounded-full bg-purple-600/10 blur-[120px]" />
 
         <div className="relative mx-auto max-w-6xl">
@@ -126,13 +224,10 @@ function Education() {
             </p>
 
             <h2 className="mt-4 text-4xl font-bold sm:text-5xl">
-
               My{" "}
-
               <span className="gradient-text">
                 Education
               </span>
-
             </h2>
 
             <p className="mt-5 leading-7 text-gray-400">
@@ -166,14 +261,12 @@ function Education() {
           ) : (
             <div className="space-y-7">
 
-              {education.map(
-                (item) => (
-                  <DarkEducationItem
-                    key={item.id}
-                    item={item}
-                  />
-                )
-              )}
+              {education.map((item) => (
+                <DarkEducationItem
+                  key={item.id}
+                  item={item}
+                />
+              ))}
 
             </div>
           )}
@@ -185,7 +278,6 @@ function Education() {
 
   /* ================================= */
   /* LIGHT THEME */
-  /* DESIGN #2 */
   /* ================================= */
 
   return (
@@ -206,9 +298,7 @@ function Education() {
 
       <div className="relative mx-auto max-w-6xl">
 
-        {/* ================================= */}
-        {/* LIGHT HEADER */}
-        {/* ================================= */}
+        {/* Light Header */}
 
         <div className="mx-auto mb-14 max-w-3xl text-center">
 
@@ -249,9 +339,7 @@ function Education() {
 
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-100 text-violet-600">
 
-              <GraduationCap
-                size={30}
-              />
+              <GraduationCap size={30} />
 
             </div>
 
@@ -274,14 +362,12 @@ function Education() {
 
             <div className="space-y-7">
 
-              {education.map(
-                (item) => (
-                  <LightEducationItem
-                    key={item.id}
-                    item={item}
-                  />
-                )
-              )}
+              {education.map((item) => (
+                <LightEducationItem
+                  key={item.id}
+                  item={item}
+                />
+              ))}
 
             </div>
 
@@ -293,14 +379,11 @@ function Education() {
   );
 }
 
-
 /* ================================= */
 /* DARK EDUCATION ITEM */
 /* ================================= */
 
-function DarkEducationItem({
-  item,
-}) {
+function DarkEducationItem({ item }) {
   return (
     <article className="glass-card group rounded-3xl p-6 transition duration-300 hover:-translate-y-1 hover:border-purple-500/30 sm:p-8">
 
@@ -310,9 +393,7 @@ function DarkEducationItem({
 
         <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-purple-500/30 bg-purple-500/10 text-purple-400">
 
-          <GraduationCap
-            size={26}
-          />
+          <GraduationCap size={26} />
 
         </div>
 
@@ -355,9 +436,7 @@ function DarkEducationItem({
             {item.location && (
               <div className="flex items-center gap-2 text-sm text-gray-500">
 
-                <MapPin
-                  size={16}
-                />
+                <MapPin size={16} />
 
                 {item.location}
 
@@ -389,6 +468,13 @@ function DarkEducationItem({
             </p>
           )}
 
+          {/* NEW: View Transcript */}
+
+          <TranscriptButton
+            transcriptPath={item.transcript_path}
+            isDark={true}
+          />
+
         </div>
 
       </div>
@@ -397,14 +483,11 @@ function DarkEducationItem({
   );
 }
 
-
 /* ================================= */
 /* LIGHT EDUCATION ITEM */
 /* ================================= */
 
-function LightEducationItem({
-  item,
-}) {
+function LightEducationItem({ item }) {
   return (
     <article className="group relative sm:pl-[84px]">
 
@@ -412,9 +495,7 @@ function LightEducationItem({
 
       <div className="absolute left-0 top-7 z-10 hidden h-14 w-14 items-center justify-center rounded-2xl border border-violet-200 bg-white text-violet-700 shadow-sm transition group-hover:border-violet-300 group-hover:bg-violet-50 sm:flex">
 
-        <GraduationCap
-          size={25}
-        />
+        <GraduationCap size={25} />
 
       </div>
 
@@ -426,9 +507,7 @@ function LightEducationItem({
 
         <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-violet-100 text-violet-700 sm:hidden">
 
-          <GraduationCap
-            size={23}
-          />
+          <GraduationCap size={23} />
 
         </div>
 
@@ -492,9 +571,7 @@ function LightEducationItem({
             {item.result_score && (
               <div className="flex items-center gap-2 rounded-xl bg-amber-50 px-3 py-2 text-sm font-medium text-amber-700">
 
-                <Award
-                  size={15}
-                />
+                <Award size={15} />
 
                 <span>
                   {item.result_score}
@@ -519,6 +596,13 @@ function LightEducationItem({
             {item.description}
           </p>
         )}
+
+        {/* NEW: View Transcript */}
+
+        <TranscriptButton
+          transcriptPath={item.transcript_path}
+          isDark={false}
+        />
 
       </div>
 

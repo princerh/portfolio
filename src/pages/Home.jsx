@@ -17,11 +17,12 @@ function Home() {
 
       <main>
         <Hero />
+        <Education />
+        <Documents />
+        <Experience />
         <Projects />
         <Skills />
-        <Education />
-        <Experience />
-        <Documents />
+        
         <BeyondTheCode />
         <Contact />
       </main>
